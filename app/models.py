@@ -51,9 +51,12 @@ class Integration(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     blogger_id = Column(Integer, ForeignKey('blogger.id'), nullable=False)
     campaign_id = Column(Integer, ForeignKey('campaign.id'), nullable=False)
-    publication_links = Column(JSON, default=list)
+    publication_links = Column(JSON, default=list) # ссылки на уже готовую публикацию
+    materials = Column(JSON, default=dict)  # храним материалы от блогера, ожидающие проверки
     views_count = Column(Integer, default=0, nullable=False)
-    approved = Column(Boolean, default=False, nullable=False)
+    approved = Column(Boolean, default=False, nullable=False) # одобрен ли контент админом
+    done = Column(Boolean, default=False, nullable=False) # блоггер сделал одобренную интеграцию или еще нет
+
 
     blogger = relationship('Blogger', back_populates='integrations')
     campaign = relationship('Campaign', back_populates='integrations')
