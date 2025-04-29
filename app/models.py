@@ -66,24 +66,26 @@ class Integration(Base):
         return value
     '''
 
-class CompanyPayment(Base):
-    __tablename__ = 'company_payment'
+class CompanyTransaction(Base):
+    __tablename__ = 'company_transaction'
 
     id = Column(Integer, primary_key=True)
     company_id = Column(Integer, ForeignKey("company.id"), nullable=False)
     money_amount = Column(Integer, nullable=False)
+    transaction_type = Column(Boolean, nullable=False)  # Тип транзакции (True - пополнение, False - расход)
     approved = Column(Boolean, default=False, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=datetime.now)
 
     company = relationship("Company", back_populates="payments")
 
 
-class BloggerPayment(Base):
-    __tablename__ = 'blogger_payment'
+class BloggerTransaction(Base):
+    __tablename__ = 'blogger_transaction'
 
     id = Column(Integer, primary_key=True)
     blogger_id = Column(Integer, ForeignKey("blogger.id"), nullable=False)
     money_amount = Column(Integer, nullable=False)
+    transaction_type = Column(Boolean, nullable=False)  # Тип транзакции (True - пополнение, False - расход)
     approved = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now)
 

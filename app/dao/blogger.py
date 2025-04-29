@@ -17,3 +17,5 @@ class CompanyDAO(BaseDAO):
     ):
 
         async with async_session_maker() as session:
+            pass
+

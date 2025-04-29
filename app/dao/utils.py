@@ -19,3 +19,5 @@ def dao_exception_handler(model):
                 return None
         return wrapper
     return decorator
+
+#Надо ловить ошибки чтобы было понятно какие
