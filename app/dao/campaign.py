@@ -1,5 +1,5 @@
 from app.dao.base import BaseDAO
-from app.models import Campaign
+from app.models import Campaign, Company
 from app.database import async_session_maker
 from app.dao.utils import dao_exception_handler
 
@@ -16,6 +16,12 @@ class CampaignDAO(BaseDAO):
             view_price: int,
     ):
         async with async_session_maker() as session:
+            company = await session.get(Company, company_id)
+            if not company:
+                raise ValueError("Company not found")
+            if company.money_balance <= 0:
+                raise ValueError("Insufficient balance to create a campaign")
+
             new_campaign = Campaign(
                 company_id=company_id,
                 description=description,

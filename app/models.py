@@ -12,7 +12,7 @@ class Company(Base):
     money_balance = Column(Integer, default=0)
 
     campaigns = relationship('Campaign', back_populates='company')
-    payments = relationship('CompanyPayment', back_populates='company')
+    company_transactions = relationship('CompanyTransaction', back_populates='company')
 
 
 
@@ -41,7 +41,7 @@ class Blogger(Base):
     approved = Column(Boolean, default=False, nullable=False)
 
     integrations = relationship('Integration', back_populates='blogger')
-    payments = relationship('BloggerPayment', back_populates='blogger')
+    blogger_transactions = relationship('BloggerTransaction', back_populates='blogger')
 
 
 
@@ -76,7 +76,7 @@ class CompanyTransaction(Base):
     approved = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now)
 
-    company = relationship("Company", back_populates="payments")
+    company = relationship("Company", back_populates="company_transactions")
 
 
 class BloggerTransaction(Base):
@@ -89,8 +89,10 @@ class BloggerTransaction(Base):
     approved = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now)
 
+    blogger = relationship("Blogger", back_populates="blogger_transactions")
 
-    blogger = relationship("Blogger", back_populates="payments")
+
+
 
 
 
