@@ -56,5 +56,3 @@ class CompanyTransactionDAO(BaseDAO):
 
 
 
-class BloggerTransactionDAO(BaseDAO):
-    model = BloggerTransaction
