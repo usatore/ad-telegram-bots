@@ -7,7 +7,7 @@ from app.config import settings
 async def main():
 
     bot = Bot(
-        token=settings.BOT_TOKEN
+        token=settings.COMPANY_BOT_TOKEN
     )
 
     dp = Dispatcher()
