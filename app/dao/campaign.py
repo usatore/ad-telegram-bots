@@ -45,10 +45,8 @@ class CampaignDAO(BaseDAO):
         """
         async with async_session_maker() as session:
             campaign = await session.get(Campaign, campaign_id)
-            if not campaign:
-                raise ValueError("Campaign not found")
-
-            campaign.approved = True
+            if campaign:
+                campaign.approved = True
             await session.commit()
             return campaign
 

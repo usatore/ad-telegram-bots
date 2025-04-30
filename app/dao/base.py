@@ -37,8 +37,20 @@ class BaseDAO:
     async def delete(cls, **filter_by):
         """
         Удаляет запись из таблицы на основе фильтров.
+        Если запись не найдена, возвращает None.
         """
         async with async_session_maker() as session:
-            query = delete(cls.model).filter_by(**filter_by)
-            await session.execute(query)
-            await session.commit()
+            # Получаем первую запись по фильтрам
+            query = select(cls.model).filter_by(**filter_by)
+            result = await session.execute(query)
+            record = result.scalars().first()
+
+            if not record:
+                return None  # Если записи нет, возвращаем None
+
+            # Удаляем запись из базы данных
+            delete_query = delete(cls.model).filter_by(**filter_by)
+            await session.execute(delete_query)
+            await session.commit()  # Коммитим транзакцию
+
+            return record  # Возвращаем (первую) удаленную запись, (удаляются все отфильтрованные))

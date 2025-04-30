@@ -1,9 +1,11 @@
-from aiogram import Router
+from aiogram import Router, Bot
 from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from app.states.states import CampaignCreationStates
 from app.dao.company import CompanyDAO
 from app.dao.campaign import CampaignDAO
+from app.utils.admin_chat import create_campaign_admin_message
+from app.config import settings
 
 
 router = Router()
@@ -87,7 +89,7 @@ async def process_view_price(message: Message, state: FSMContext):
 
 # Обработчик нажатия на кнопку
 @router.callback_query(callback_data="submit_for_check")
-async def process_check_submission(callback: CallbackQuery, state: FSMContext):
+async def process_check_submission(bot: Bot, callback: CallbackQuery, state: FSMContext):
     # Подтверждаем callback (чтобы убрать "часики" на кнопке)
     await callback.answer()
 
@@ -108,12 +110,35 @@ async def process_check_submission(callback: CallbackQuery, state: FSMContext):
     telegram_id = callback.from_user.id
 
     company = await CompanyDAO.get_one_or_none(telegram_id=telegram_id)
-
     campaign = await CampaignDAO.create_campaign(
         company_id=company.id,
         description=description,
         view_price=view_price,
     )
+
+    username = callback.from_user.username
+    full_name = callback.from_user.full_name
+
+    # Формируем сообщение и клавиатуру для админского чата
+    admin_message, admin_markup = create_campaign_admin_message(
+        campaign=campaign,
+        company=company,
+        telegram_id=telegram_id,
+        username=username,
+        full_name=full_name,
+        description=description
+    )
+
+    await bot.send_message(
+        chat_id=settings.ADMIN_CHAT_ID,
+        text=admin_message,
+        reply_markup=admin_markup
+    )
+
+
+
+
+
 
     # Осталось отправить сообщение от бота в админчат со всеми деталями и двумя кнопками
 

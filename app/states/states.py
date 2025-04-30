@@ -12,3 +12,6 @@ class CampaignCreationStates(StatesGroup):
     waiting_for_advertising_style = State()  # Как подавать информацию
     waiting_for_view_price = State()  # Сколько платят за 1 просмотр
     waiting_for_check_submission = State()  # Когда компания отправлена на проверку
+
+class AdminStates(StatesGroup):
+    waiting_for_input_reason = State()  # Новое состояние для причины отклонения

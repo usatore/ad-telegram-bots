@@ -5,6 +5,10 @@ class Settings(BaseSettings):
     COMPANY_BOT_TOKEN: str
     BLOGGER_BOT_TOKEN: str
 
+    ADMIN_CHAT_ID: int
+
+    ADMIN_IDS: list
+
     DB_HOST: str
     DB_PORT: int
     DB_USER: str
