@@ -3,7 +3,7 @@ from aiogram import Bot, F, Router
 from app.dao.company import CompanyDAO
 from app.dao.campaign import CampaignDAO
 from aiogram.fsm.context import FSMContext
-from app.states.states import AdminStates
+from app.states.states import CompanyAdminStates
 from app.utils.admin_chat import for_admin
 
 router = Router()
@@ -52,12 +52,12 @@ async def reject_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
         return
 
     await state.update_data(campaign_id=campaign_id)
-    await state.set_state(AdminStates.waiting_for_input_reason)
+    await state.set_state(CompanyAdminStates.waiting_for_reason)
 
     await callback.message.edit_text("Введите причину отклонения кампании:")
 
 
-@router.message(AdminStates.waiting_for_input_reason)
+@router.message(CompanyAdminStates.waiting_for_reason)
 @for_admin  # Добавляем декоратор для проверки прав администратора
 async def process_input_reason_and_delete_campaign(
     message: Message, state: FSMContext, bot: Bot
@@ -68,6 +68,7 @@ async def process_input_reason_and_delete_campaign(
 
     if not message.text:
         await message.answer("Пожалуйста, введите причину текстом.")
+        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
         return
 
     data = await state.get_data()

@@ -1,6 +1,7 @@
-from aiogram.fsm.state import default_state, State, StatesGroup
+from aiogram.fsm.state import State, StatesGroup
 
 
+# Company
 class CampaignCreationStates(StatesGroup):
     # Этапы для ввода информации рекламной кампании
     waiting_for_content_type = State()  # Тип контента (Текст и Видео)
@@ -14,5 +15,17 @@ class CampaignCreationStates(StatesGroup):
     waiting_for_check_submission = State()  # Когда компания отправлена на проверку
 
 
-class AdminStates(StatesGroup):
-    waiting_for_input_reason = State()  # Новое состояние для причины отклонения
+# Admin
+class CompanyAdminStates(StatesGroup):
+    waiting_for_reason = State()  # Новое состояние для причины отклонения кампании
+
+
+class BloggerAdminStates(StatesGroup):
+    waiting_for_reason = (
+        State()
+    )  # Новое состояние для причины отклонения блоггера(ссылок)
+
+
+# Blogger
+class BloggerStates(StatesGroup):
+    waiting_for_profile_links = State()

@@ -1,8 +1,8 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from app.config import settings
-from app.storage import company_storage, blogger_storage
-from app.handlers.campaign_creation_handlers import router as router_campaign_creation
+from app.storage import company_storage
+from app.handlers.company.campaign_creation import router as router_campaign_creation
 
 
 async def main():

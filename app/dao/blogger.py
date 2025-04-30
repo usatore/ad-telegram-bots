@@ -28,6 +28,7 @@ class BloggerDAO(BaseDAO):
             new_blogger = Blogger(telegram_id=telegram_id, profile_links=profile_links)
             session.add(new_blogger)
             await session.commit()
+            # await session.refresh(new_blogger)
             return new_blogger
 
     @classmethod
@@ -38,11 +39,9 @@ class BloggerDAO(BaseDAO):
         """
         async with async_session_maker() as session:
             blogger = await session.get(cls.model, blogger_id)
-            if not blogger:
-                raise ValueError(f"Blogger with id {blogger_id} not found")
-
-            blogger.approved = True
-            await session.commit()
+            if blogger:
+                blogger.approved = True
+                await session.commit()
             return blogger
 
     @classmethod
