@@ -55,7 +55,7 @@ class CampaignDAO(BaseDAO):
             return campaign
 
     @classmethod
-    @dao_exception_handler(Campaign)
+    @dao_exception_handler(model)
     async def get_approved_campaigns_not_joined_by_blogger(cls, blogger_id: int):
         """
         Возвращает список утверждённых кампаний, в которых

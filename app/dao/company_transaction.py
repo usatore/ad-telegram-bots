@@ -11,7 +11,7 @@ class CompanyTransactionDAO(BaseDAO):
 
     @classmethod
     @dao_exception_handler(CompanyTransaction)
-    async def create_deposit(cls, company_id: int, money_amount: int):
+    async def add_deposit(cls, company_id: int, money_amount: int):
         """
         Создаёт транзакцию на пополнение баланса компании.
         Баланс изменится только после одобрения транзакции.

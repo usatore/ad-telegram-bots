@@ -10,7 +10,12 @@ class IntegrationDAO(BaseDAO):
 
     @classmethod
     @dao_exception_handler(Integration)
-    async def create_integration(cls, blogger_id: int, campaign_id: int, publication_links: list):
+    async def create_integration(
+            cls,
+            blogger_id: int,
+            campaign_id: int,
+            materials: dict,
+    ):
         """
         Создаёт интеграцию между блоггером и кампанией.
         Устанавливает связь между блоггером и кампанией с указанными публикациями.
@@ -39,8 +44,8 @@ class IntegrationDAO(BaseDAO):
             new_integration = Integration(
                 blogger_id=blogger_id,
                 campaign_id=campaign_id,
-                publication_links=publication_links,
-                approved=False,  # по умолчанию интеграция не утверждена
+                materials=materials,
+
             )
 
             session.add(new_integration)
@@ -49,7 +54,7 @@ class IntegrationDAO(BaseDAO):
 
     @classmethod
     @dao_exception_handler(Integration)
-    async def approve_integration(cls, integration_id: int):
+    async def approve_integration_materials(cls, integration_id: int):
         """
         Утверждает интеграцию.
         """
@@ -59,13 +64,39 @@ class IntegrationDAO(BaseDAO):
                 raise ValueError("Integration not found")
 
             if integration.approved:
-                raise ValueError("Integration already approved")
+                raise ValueError("Integration materials already approved")
 
-            # Утверждаем интеграцию
+            # Утверждаем интеграцию (в смысле материалы)
             integration.approved = True
             await session.commit()
             return integration
 
+    @classmethod
+    @dao_exception_handler(Integration)
+    async def approve_integration_is_done(cls, integration_id: int):
+        """
+        Подтверждает, что блоггер выполнил интеграцию (опубликовал контент).
+        Устанавливает флаг done = True.
+        """
+        async with async_session_maker() as session:
+            integration = await session.get(Integration, integration_id)
+            if not integration:
+                raise ValueError("Integration not found")
+
+            if not integration.approved:
+                raise ValueError("Materials not yet approved")
+
+            if integration.done:
+                raise ValueError("Integration already marked as done")
+
+            integration.done = True
+            await session.commit()
+            return integration
+
+
+
+
+'''
     @classmethod
     @dao_exception_handler(Integration)
     async def get_integrations_for_blogger(cls, blogger_id: int):
@@ -78,6 +109,10 @@ class IntegrationDAO(BaseDAO):
             )
             return integrations.scalars().all()
 
+
+ Думаю, что не приходится так как можно использовать get_all(**filter_by).
+Но если функционал расширится то пригодится.
+
     @classmethod
     @dao_exception_handler(Integration)
     async def get_integrations_for_campaign(cls, campaign_id: int):
@@ -89,4 +124,4 @@ class IntegrationDAO(BaseDAO):
                 select(Integration).filter(Integration.campaign_id == campaign_id)
             )
             return integrations.scalars().all()
-
+'''

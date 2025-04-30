@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from app.database import async_session_maker
 from app.dao.utils import dao_exception_handler
 
@@ -7,7 +7,7 @@ class BaseDAO:
 
     @classmethod
     @dao_exception_handler(model)
-    async def find_all(cls, **filter_by):
+    async def get_all(cls, **filter_by):
         async with async_session_maker() as session:
 
             query = select(cls.model).filter_by(**filter_by)
@@ -21,7 +21,7 @@ class BaseDAO:
 
     @classmethod
     @dao_exception_handler(model)
-    async def find_one_or_none(cls, **filter_by):
+    async def get_one_or_none(cls, **filter_by):
         async with async_session_maker() as session:
 
             query = select(cls.model).filter_by(**filter_by)
@@ -31,3 +31,14 @@ class BaseDAO:
 
         #   return result.mappings().one_or_none()
             return result.scalars().one_or_none()
+
+    @classmethod
+    @dao_exception_handler(model)
+    async def delete(cls, **filter_by):
+        """
+        Удаляет запись из таблицы на основе фильтров.
+        """
+        async with async_session_maker() as session:
+            query = delete(cls.model).filter_by(**filter_by)
+            await session.execute(query)
+            await session.commit()
