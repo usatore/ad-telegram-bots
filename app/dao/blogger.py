@@ -26,6 +26,20 @@ class BloggerDAO(BaseDAO):
             await session.commit()
             return new_blogger
 
+    @classmethod
+    @dao_exception_handler(model)
+    async def approve_blogger(cls, blogger_id: int):
+        """
+        Аппрувит блоггера по ID (ставит approved=True если админ одобрил ссылки блоггера).
+        """
+        async with async_session_maker() as session:
+            blogger = await session.get(cls.model, blogger_id)
+            if not blogger:
+                raise ValueError(f"Blogger with id {blogger_id} not found")
+
+            blogger.approved = True
+            await session.commit()
+            return blogger
 
 
     @classmethod
