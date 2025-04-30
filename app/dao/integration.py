@@ -11,10 +11,10 @@ class IntegrationDAO(BaseDAO):
     @classmethod
     @dao_exception_handler(Integration)
     async def create_integration(
-            cls,
-            blogger_id: int,
-            campaign_id: int,
-            materials: dict,
+        cls,
+        blogger_id: int,
+        campaign_id: int,
+        materials: dict,
     ):
         """
         Создаёт интеграцию между блоггером и кампанией.
@@ -34,7 +34,8 @@ class IntegrationDAO(BaseDAO):
             # Проверяем, не существует ли уже интеграция
             existing_integration = await session.execute(
                 select(Integration).filter(
-                    Integration.blogger_id == blogger_id, Integration.campaign_id == campaign_id
+                    Integration.blogger_id == blogger_id,
+                    Integration.campaign_id == campaign_id,
                 )
             )
             if existing_integration.scalars().first():
@@ -45,7 +46,6 @@ class IntegrationDAO(BaseDAO):
                 blogger_id=blogger_id,
                 campaign_id=campaign_id,
                 materials=materials,
-
             )
 
             session.add(new_integration)
@@ -92,8 +92,6 @@ class IntegrationDAO(BaseDAO):
             integration.done = True
             await session.commit()
             return integration
-
-
 
 
 '''

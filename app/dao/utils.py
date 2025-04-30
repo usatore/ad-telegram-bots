@@ -17,7 +17,10 @@ def dao_exception_handler(model):
                 msg = "Unknown Exc: Cannot perform operation"
                 logger.error(msg, extra={"table": model.__tablename__}, exc_info=True)
                 return None
+
         return wrapper
+
     return decorator
 
-#Надо ловить ошибки чтобы было понятно какие
+
+# Надо ловить ошибки чтобы было понятно какие

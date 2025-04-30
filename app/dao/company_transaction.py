@@ -53,6 +53,3 @@ class CompanyTransactionDAO(BaseDAO):
 
             await session.commit()
             return transaction
-
-
-

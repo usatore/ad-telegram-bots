@@ -29,9 +29,7 @@ class CampaignDAO(BaseDAO):
                 raise ValueError("Insufficient balance to create a campaign")
 
             new_campaign = Campaign(
-                company_id=company_id,
-                description=description,
-                view_price=view_price
+                company_id=company_id, description=description, view_price=view_price
             )
             session.add(new_campaign)
             await session.commit()
@@ -64,9 +62,8 @@ class CampaignDAO(BaseDAO):
         Используется в Telegram-боте, чтобы показать блоггеру только доступные кампании.
         """
         async with async_session_maker() as session:
-            subquery = (
-                select(Integration.campaign_id)
-                .filter(Integration.blogger_id == blogger_id)
+            subquery = select(Integration.campaign_id).filter(
+                Integration.blogger_id == blogger_id
             )
 
             query = (

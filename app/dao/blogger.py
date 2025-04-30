@@ -16,9 +16,13 @@ class BloggerDAO(BaseDAO):
         """
         async with async_session_maker() as session:
             # Проверяем, существует ли блоггер с таким Telegram ID
-            existing_blogger = await session.execute(select(cls.model).filter_by(telegram_id=telegram_id))
+            existing_blogger = await session.execute(
+                select(cls.model).filter_by(telegram_id=telegram_id)
+            )
             if existing_blogger.scalars().first():
-                raise ValueError(f"Blogger with telegram_id {telegram_id} already exists")
+                raise ValueError(
+                    f"Blogger with telegram_id {telegram_id} already exists"
+                )
 
             # Создаём нового блоггера
             new_blogger = Blogger(telegram_id=telegram_id, profile_links=profile_links)
@@ -41,10 +45,11 @@ class BloggerDAO(BaseDAO):
             await session.commit()
             return blogger
 
-
     @classmethod
     @dao_exception_handler(model)
-    async def update_blogger_profile_links(cls, blogger_id: int, new_profile_links: list):
+    async def update_blogger_profile_links(
+        cls, blogger_id: int, new_profile_links: list
+    ):
         """
         Обновляет профили блоггера по его ID.
         """
@@ -56,4 +61,3 @@ class BloggerDAO(BaseDAO):
             blogger.profile_links = new_profile_links
             await session.commit()
             return blogger
-
