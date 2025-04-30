@@ -98,19 +98,19 @@ async def process_view_price(message: Message, state: FSMContext):
 
 
 # Обработчик нажатия на кнопку
-@router.callback_query(callback_data="submit_for_check")
+@router.callback_query(
+    CampaignCreationStates.waiting_for_check_submission,
+    callback_data="submit_for_check",
+)
 async def process_check_submission(
     bot: Bot, callback: CallbackQuery, state: FSMContext
 ):
-    # Подтверждаем callback (чтобы убрать "часики" на кнопке)
+
     await callback.answer()
 
-    # Здесь можно добавить логику обработки отправки на проверку
-    # Например, получить данные из состояния
     data = await state.get_data()
     view_price = data.get("view_price")
 
-    # Пример действия: отправка сообщения
     await callback.message.edit_text(
         f"Рекламная компания уже проверяется, когда она будет проверена, вы будете проинформированы!"
     )
@@ -144,8 +144,6 @@ async def process_check_submission(
     await bot.send_message(
         chat_id=settings.ADMIN_CHAT_ID, text=admin_message, reply_markup=admin_markup
     )
-
-    # Осталось отправить сообщение от бота в админчат со всеми деталями и двумя кнопками
 
     # Очищаем состояние
     await state.clear()

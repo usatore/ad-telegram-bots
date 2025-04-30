@@ -66,6 +66,10 @@ async def process_input_reason_and_delete_campaign(
     Обработчик ввода причины отклонения кампании.
     """
 
+    if not message.text:
+        await message.answer("Пожалуйста, введите причину текстом.")
+        return
+
     data = await state.get_data()
     campaign_id = data.get("campaign_id")
 
