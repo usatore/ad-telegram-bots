@@ -1,5 +1,10 @@
 from aiogram import Router, Bot
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from aiogram.types import (
+    Message,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    CallbackQuery,
+)
 from aiogram.fsm.context import FSMContext
 from app.states.states import CampaignCreationStates
 from app.dao.company import CompanyDAO
@@ -32,7 +37,9 @@ async def process_audience_priority(message: Message, state: FSMContext):
     audience_priority = message.text
     await state.update_data(audience_priority=audience_priority)
     await state.set_state(CampaignCreationStates.waiting_for_product_type)
-    await message.answer("Что за продукт? (Например: Бренд одежды, Hr бренд или Салон красоты):")
+    await message.answer(
+        "Что за продукт? (Например: Бренд одежды, Hr бренд или Салон красоты):"
+    )
 
 
 @router.message(CampaignCreationStates.waiting_for_product_type)
@@ -56,7 +63,9 @@ async def process_contact_method(message: Message, state: FSMContext):
     contact_method = message.text
     await state.update_data(contact_method=contact_method)
     await state.set_state(CampaignCreationStates.waiting_for_advertising_style)
-    await message.answer("Как вы хотите подавать информацию? (Нативно, рекомендация или детальный рассказ о продукте):")
+    await message.answer(
+        "Как вы хотите подавать информацию? (Нативно, рекомендация или детальный рассказ о продукте):"
+    )
 
 
 @router.message(CampaignCreationStates.waiting_for_advertising_style)
@@ -64,7 +73,9 @@ async def process_advertising_style(message: Message, state: FSMContext):
     advertising_style = message.text
     await state.update_data(advertising_style=advertising_style)
     await state.set_state(CampaignCreationStates.waiting_for_view_price)
-    await message.answer("Сколько вы платите за 1 просмотр? (Рекомендуем поставить 2р за просмотр):")
+    await message.answer(
+        "Сколько вы платите за 1 просмотр? (Рекомендуем поставить 2р за просмотр):"
+    )
 
 
 @router.message(CampaignCreationStates.waiting_for_view_price)
@@ -74,8 +85,7 @@ async def process_view_price(message: Message, state: FSMContext):
     await state.set_state(CampaignCreationStates.waiting_for_check_submission)
 
     check_submission_button = InlineKeyboardButton(
-        text="Отправить на проверку",
-        callback_data="submit_for_check"
+        text="Отправить на проверку", callback_data="submit_for_check"
     )
     check_submission_markup = InlineKeyboardMarkup(
         inline_keyboard=[[check_submission_button]]
@@ -83,13 +93,15 @@ async def process_view_price(message: Message, state: FSMContext):
 
     await message.answer(
         "Нажмите кнопку ниже, чтобы отправить рекламную кампанию на проверку.",
-        reply_markup=check_submission_markup
+        reply_markup=check_submission_markup,
     )
 
 
 # Обработчик нажатия на кнопку
 @router.callback_query(callback_data="submit_for_check")
-async def process_check_submission(bot: Bot, callback: CallbackQuery, state: FSMContext):
+async def process_check_submission(
+    bot: Bot, callback: CallbackQuery, state: FSMContext
+):
     # Подтверждаем callback (чтобы убрать "часики" на кнопке)
     await callback.answer()
 
@@ -126,19 +138,12 @@ async def process_check_submission(bot: Bot, callback: CallbackQuery, state: FSM
         telegram_id=telegram_id,
         username=username,
         full_name=full_name,
-        description=description
+        description=description,
     )
 
     await bot.send_message(
-        chat_id=settings.ADMIN_CHAT_ID,
-        text=admin_message,
-        reply_markup=admin_markup
+        chat_id=settings.ADMIN_CHAT_ID, text=admin_message, reply_markup=admin_markup
     )
-
-
-
-
-
 
     # Осталось отправить сообщение от бота в админчат со всеми деталями и двумя кнопками
 

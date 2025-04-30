@@ -8,6 +8,7 @@ from app.utils.admin_chat import for_admin
 
 router = Router()
 
+
 # Обработчик для кнопки "Принять"
 @router.callback_query(F.data.startswith("approve_campaign:"))
 @for_admin
@@ -30,14 +31,14 @@ async def approve_campaign(callback: CallbackQuery, bot: Bot):
     if company:
         await bot.send_message(
             chat_id=company.telegram_id,
-            text=f"Ваша кампания (ID: {campaign_id}) одобрена и запущена!"
+            text=f"Ваша кампания (ID: {campaign_id})  опубликована, как только будут поступать рекламные интеграции от пользователей, вы будете получать ссылки на эти интеграции.!",
         )
 
     # Обновляем сообщение в админском чате
     await callback.message.edit_text(
-        f"Кампания (ID: {campaign_id}) одобрена!",
-        reply_markup=None
+        f"Кампания (ID: {campaign_id}) одобрена!", reply_markup=None
     )
+
 
 # Обработчик для кнопки "Отклонить" запускает состояние на ввод причины
 @router.callback_query(F.data.startswith("reject_campaign:"))
@@ -53,13 +54,14 @@ async def reject_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
     await state.update_data(campaign_id=campaign_id)
     await state.set_state(AdminStates.waiting_for_input_reason)
 
-    await callback.message.edit_text(
-        "Введите причину отклонения кампании:")
+    await callback.message.edit_text("Введите причину отклонения кампании:")
 
 
 @router.message(AdminStates.waiting_for_input_reason)
 @for_admin  # Добавляем декоратор для проверки прав администратора
-async def process_input_reason_and_delete_campaign(message: Message, state: FSMContext, bot: Bot):
+async def process_input_reason_and_delete_campaign(
+    message: Message, state: FSMContext, bot: Bot
+):
     """
     Обработчик ввода причины отклонения кампании.
     """
@@ -79,9 +81,11 @@ async def process_input_reason_and_delete_campaign(message: Message, state: FSMC
     if company:
         await bot.send_message(
             chat_id=company.telegram_id,
-            text=f"Ваша кампания (ID: {campaign_id}) отклонена и удалена по причине: {message.text}"
+            text=f"Ваша кампания (ID: {campaign_id}) отклонена и удалена по причине: {message.text}",
         )
 
     # Сообщаем администратору, что кампания была отклонена и удалена
-    await message.answer(f"Кампания (ID: {campaign_id}) отклонена и удалена по причине: {message.text}")
+    await message.answer(
+        f"Кампания (ID: {campaign_id}) отклонена и удалена по причине: {message.text}"
+    )
     await state.clear()

@@ -20,7 +20,6 @@ class CompanyDAO(BaseDAO):
             if existing_company:
                 raise ValueError("Company with this telegram_id already exists")
 
-
             new_company = cls.model(telegram_id=telegram_id)
             session.add(new_company)
             await session.commit()

@@ -10,7 +10,7 @@ def create_campaign_admin_message(
     telegram_id: int,
     username: str,
     full_name: str,
-    description: dict
+    description: dict,
 ) -> tuple[str, InlineKeyboardMarkup]:
     """
     Формирует сообщение и клавиатуру для отправки в админский чат.
@@ -46,14 +46,11 @@ def create_campaign_admin_message(
 
     # Создаем кнопки
     approve_button = InlineKeyboardButton(
-        text="Принять",
-        callback_data=f"approve_campaign:{campaign.id}"
+        text="Принять", callback_data=f"approve_campaign:{campaign.id}"
     )
     reject_button = InlineKeyboardButton(
-        text="Отказать",
-        callback_data=f"reject_campaign:{campaign.id}"
+        text="Отказать", callback_data=f"reject_campaign:{campaign.id}"
     )
-
 
     admin_markup = InlineKeyboardMarkup(
         inline_keyboard=[[approve_button, reject_button]]
@@ -65,13 +62,23 @@ def create_campaign_admin_message(
 def extract_user_id(update) -> int:
     """Извлекает user_id из update, если найден нужный объект."""
     # Список атрибутов, которые могут содержать .from_user.id
-    update_paths = ['message', 'edited_message', 'callback_query', 'inline_query',
-                    'chosen_inline_result', 'shipping_query', 'pre_checkout_query',
-                    'poll_answer', 'my_chat_member', 'chat_member', 'chat_join_request']
+    update_paths = [
+        "message",
+        "edited_message",
+        "callback_query",
+        "inline_query",
+        "chosen_inline_result",
+        "shipping_query",
+        "pre_checkout_query",
+        "poll_answer",
+        "my_chat_member",
+        "chat_member",
+        "chat_join_request",
+    ]
 
     for path in update_paths:
         # Используем getattr, чтобы безопасно получить атрибут
-        user = getattr(getattr(update, path, None), 'from_user', None)
+        user = getattr(getattr(update, path, None), "from_user", None)
         if user is not None:
             return user.id
 
