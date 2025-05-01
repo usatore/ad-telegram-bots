@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher
 from app.config import settings
 import asyncio
 from app.storage import blogger_storage
+from app.logger import logger
 
 # Импорт всех роутеров блогера
 from app.handlers.blogger.admin_chat import router as router_blogger_admin_chat
@@ -11,19 +12,30 @@ from app.handlers.blogger.get_campaigns import router as router_blogger_get_camp
 
 
 async def run_blogger_bot():
-    bot = Bot(token=settings.BLOGGER_BOT_TOKEN)
-    dp = Dispatcher(storage=blogger_storage)
+    try:
+        bot = Bot(token=settings.BLOGGER_BOT_TOKEN)
+        dp = Dispatcher(storage=blogger_storage)
 
-    dp.include_routers(
-        router_blogger_admin_chat,
-        router_blogger_create_profile,
-        router_blogger_main_menu,
-        router_blogger_get_campaigns,
-    )
+        # Логируем подключение роутеров
+        logger.info("🚀 Подключение роутеров блогера...")
+        dp.include_routers(
+            router_blogger_admin_chat,
+            router_blogger_create_profile,
+            router_blogger_main_menu,
+            router_blogger_get_campaigns,
+        )
+        logger.info("✅ Роутеры блогера успешно подключены.")
 
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+        # Логируем запуск опроса
+        logger.info("Запуск опроса бота...")
+        await dp.start_polling(bot)
+        logger.info("✅ Опрос бота запущен.")
+    except Exception as e:
+        logger.exception("❌ Ошибка при запуске бота")
+        raise
 
 
 if __name__ == "__main__":
+    logger.info("Запуск бота...")
     asyncio.run(run_blogger_bot())
+    logger.info("🚨 Бот завершил работу.")

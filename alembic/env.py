@@ -13,7 +13,7 @@ from app.models import Blogger, Campaign, Company, Integration, BloggerTransacti
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url", f"{settings.DATABASE_URL}?async_fallback=True")
+config.set_main_option("sqlalchemy.url", f"{settings.DB_URL}?async_fallback=True")
 
 
 # Interpret the config file for Python logging.

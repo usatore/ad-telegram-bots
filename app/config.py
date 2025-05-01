@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from app.logger import logger
 
 
 class Settings(BaseSettings):
@@ -6,7 +7,6 @@ class Settings(BaseSettings):
     BLOGGER_BOT_TOKEN: str
 
     ADMIN_CHAT_ID: int
-
     ADMIN_IDS: list[int]
 
     DB_HOST: str
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     REDIS_PORT: int
 
     @property
-    def DATABASE_URL(self) -> str:
+    def DB_URL(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(
@@ -29,4 +29,15 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+try:
+    settings = Settings()
+    logger.info("✅ Настройки успешно загружены из .env")
+    logger.debug(f"DB_HOST: {settings.DB_HOST}, DB_PORT: {settings.DB_PORT}")
+    logger.debug(
+        f"REDIS_HOST: {settings.REDIS_HOST}, REDIS_PORT: {settings.REDIS_PORT}"
+    )
+    logger.debug(f"ADMIN_CHAT_ID: {settings.ADMIN_CHAT_ID}")
+    logger.debug(f"ADMIN_IDS: {settings.ADMIN_IDS}")
+except Exception:
+    logger.exception("❌ Ошибка при загрузке настроек из .env")
+    raise
