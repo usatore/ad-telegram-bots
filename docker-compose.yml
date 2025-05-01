@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:latest
+    env_file:
+      - .env-non-dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    #restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    #restart: unless-stopped
+
+
+  company_bot:
+    build:
+      context: .
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m app.bots.company"
+    env_file: .env-non-dev
+    depends_on:
+      - db
+      - redis
+    #restart: unless-stopped
+
+  blogger_bot:
+    build:
+      context: .
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m app.bots.blogger"
+    env_file: .env-non-dev
+    depends_on:
+      - db
+      - redis
+    #restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
