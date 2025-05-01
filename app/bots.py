@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from app.config import settings
-from app.storage import company_storage
+from app.storage import company_storage, blogger_storage
 from app.handlers.company.main_menu import router as router_company_main_menu
 from app.handlers.blogger.admin_chat import router as router_blogger_admin_chat
 from app.handlers.blogger.create_profile import router as router_blogger_create_profile
@@ -24,8 +24,8 @@ async def run_blogger_bot():
     bot = Bot(token=settings.BLOGGER_BOT_TOKEN)
 
     dp = Dispatcher(
-        storage=company_storage
-    )  # Можно использовать тот же storage, если нужно
+        storage=blogger_storage
+    )
 
     dp.include_router(router_blogger_admin_chat)
     dp.include_router(router_blogger_create_profile)
