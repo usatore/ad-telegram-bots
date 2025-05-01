@@ -5,7 +5,9 @@ from app.storage import company_storage, blogger_storage
 # Импорт всех роутеров компании
 from app.handlers.company.main_menu import router as router_company_main_menu
 from app.handlers.company.get_campaigns import router as router_company_get_campaigns
-from app.handlers.company.create_campaign import router as router_company_create_campaign
+from app.handlers.company.create_campaign import (
+    router as router_company_create_campaign,
+)
 from app.handlers.company.admin_chat import router as router_company_admin_chat
 
 # Импорт всех роутеров блогера

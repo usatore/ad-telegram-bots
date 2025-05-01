@@ -15,11 +15,14 @@ from app.config import settings
 
 router = Router()
 
-@router.callback_query(F.data == 'create_campaign')
+
+@router.callback_query(F.data == "create_campaign")
 async def create_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
     await callback.answer()
     await state.set_state(CampaignCreationStates.waiting_for_content_type)
-    await callback.message.answer("Последовательно заполните данные об анкете. \n Укажите типы контента")
+    await callback.message.answer(
+        "Последовательно заполните данные об анкете. \n Укажите типы контента"
+    )
 
 
 @router.message(CampaignCreationStates.waiting_for_content_type)
@@ -108,9 +111,7 @@ async def process_view_price(message: Message, state: FSMContext):
     CampaignCreationStates.waiting_for_check_submission,
     F.data == "submit_for_check",
 )
-async def process_check_submission(
-    callback: CallbackQuery, state: FSMContext
-):
+async def process_check_submission(callback: CallbackQuery, state: FSMContext):
 
     await callback.answer()
 
@@ -147,7 +148,7 @@ async def process_check_submission(
         username=username,
         full_name=full_name,
         description=description,
-        view_price=view_price
+        view_price=view_price,
     )
 
     await callback.bot.send_message(

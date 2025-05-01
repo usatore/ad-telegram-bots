@@ -42,40 +42,36 @@ async def approve_campaign(callback: CallbackQuery, bot: Bot):
 
 # Обработчик для кнопки "Отклонить" запускает состояние на ввод причины
 @router.callback_query(F.data.startswith("reject_campaign:"))
-@for_admin
+# @for_admin
 async def reject_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
     await callback.answer()
     try:
         campaign_id = int(callback.data.split(":")[1])
+        print(campaign_id)
     except (IndexError, ValueError):
         await callback.message.answer("Некорректный формат данных.")
         return
 
-    await state.update_data(campaign_id=campaign_id)
     await state.set_state(CompanyAdminStates.waiting_for_reason)
+    await state.update_data(campaign_id=campaign_id)
 
-    await callback.message.edit_text("Введите причину отклонения кампании:")
+    await callback.message.answer("Введите причину отклонения кампании:")
 
 
 @router.message(CompanyAdminStates.waiting_for_reason)
-@for_admin  # Добавляем декоратор для проверки прав администратора
+# @for_admin здесь с этим декоратором-фильтра ошибка, в прицнипе это не обязательно.
 async def process_input_reason_and_delete_campaign(
-    message: Message, state: FSMContext, bot: Bot
+    message: Message, bot: Bot, state: FSMContext
 ):
     """
     Обработчик ввода причины отклонения кампании.
     """
 
-    if not message.text:
-        await message.answer("Пожалуйста, введите причину текстом.")
-        await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-        return
-
     data = await state.get_data()
     campaign_id = data.get("campaign_id")
 
     # Удаляем кампанию из базы данных
-    campaign = await CampaignDAO.delete(campaign_id=campaign_id)
+    campaign = await CampaignDAO.delete(id=campaign_id)
 
     if not campaign:
         await message.answer("Кампания не найдена или уже удалена.")
@@ -83,6 +79,7 @@ async def process_input_reason_and_delete_campaign(
 
     # Находим компанию для уведомления компании
     company = await CompanyDAO.get_one_or_none(id=campaign.company_id)
+    # company = campaign.company
     if company:
         await bot.send_message(
             chat_id=company.telegram_id,

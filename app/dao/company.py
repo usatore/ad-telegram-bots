@@ -16,12 +16,12 @@ class CompanyDAO(BaseDAO):
             query = select(cls.model).filter_by(telegram_id=telegram_id)
             result = await session.execute(query)
 
-            '''
+            """
             Добавили проверку на это в хенлере commandstart для компаний
             existing_company = result.scalars().first()
             if existing_company:
                 raise ValueError("Company with this telegram_id already exists")
-            '''
+            """
 
             new_company = cls.model(telegram_id=telegram_id)
             session.add(new_company)

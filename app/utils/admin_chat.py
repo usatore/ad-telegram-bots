@@ -170,7 +170,7 @@ def extract_user_id(update) -> int:
         "my_chat_member",
         "chat_member",
         "chat_join_request",
-    ]
+    ] # не хватает путей ловить апдейты из сообщений от админа в админчате
 
     for path in update_paths:
         # Используем getattr, чтобы безопасно получить атрибут
@@ -179,6 +179,7 @@ def extract_user_id(update) -> int:
             return user.id
 
 
+#в админчате пока не работает
 def for_admin(func):
     """Декоратор для проверки прав доступа администратора."""
 
@@ -190,7 +191,7 @@ def for_admin(func):
         if user_id not in settings.ADMIN_IDS:
             # Логируем или выводим сообщение
             print(f"Unauthorized access attempt by user {user_id}")
-            return  # Можно добавить return с сообщением или выводом ошибки, если нужно
+            return
 
         # Если пользователь админ, выполняем основную логику
         return await func(update, *args, **kwargs)
