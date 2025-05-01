@@ -8,11 +8,11 @@ from app.dao.blogger import Blogger
 
 
 def create_integration_admin_message(
-        integration: Integration,
-        blogger: Blogger,
-        username: str,
-        full_name: str,
-        materials: dict
+    integration: Integration,
+    blogger: Blogger,
+    username: str,
+    full_name: str,
+    materials: dict,
 ) -> tuple[str, InlineKeyboardMarkup]:
     """
     Формирует сообщение и клавиатуру для отправки в админский чат о создании материалов интеграции.
@@ -53,6 +53,8 @@ def create_integration_admin_message(
     )
 
     return admin_message, admin_markup
+
+
 def create_profile_links_admin_message(
     blogger: Blogger,
     username: str,

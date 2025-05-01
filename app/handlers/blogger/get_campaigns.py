@@ -5,7 +5,7 @@ from aiogram.types import (
     InlineKeyboardMarkup,
 )
 from aiogram import Router, Bot, F
-from app.dao.integration import IntegrationDAO  # Если у тебя есть DAO для интеграций
+from app.dao.integration import IntegrationDAO
 from app.dao.blogger import BloggerDAO
 from app.dao.campaign import CampaignDAO
 from app.config import settings

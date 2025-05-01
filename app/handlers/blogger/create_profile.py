@@ -2,7 +2,6 @@ from aiogram.types import CallbackQuery, Message
 from aiogram import Router, Bot, F
 from aiogram.fsm.context import FSMContext
 from app.states.states import BloggerStates
-from app.utils.admin_chat import for_admin  # Декоратор для проверки прав
 from app.dao.blogger import BloggerDAO
 from app.config import settings
 from app.utils.admin_chat import create_profile_links_admin_message
@@ -13,7 +12,6 @@ router = Router()
 
 # Хендлер на нажатие кнопки "Создать профиль блоггера"
 @router.callback_query(F.data == "create_blogger_profile")
-@for_admin
 async def process_input_profile_links(callback: CallbackQuery, state: FSMContext):
     await callback.answer("Пожалуйста, отправьте ссылку на профиль блоггера:")
 
@@ -24,7 +22,6 @@ async def process_input_profile_links(callback: CallbackQuery, state: FSMContext
 
 # Хендлер на ввод profile ссылок блоггера
 @router.message(BloggerStates.waiting_for_profile_links)
-@for_admin
 async def process_profile_links(message: Message, state: FSMContext, bot: Bot):
     if not message.text:
         await message.answer("Пожалуйста, введите ссылки построчно.")

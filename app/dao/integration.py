@@ -106,6 +106,7 @@ class IntegrationDAO(BaseDAO):
                 await session.commit()
             return integration
 
+
 '''
     @classmethod
     @dao_exception_handler(Integration)
