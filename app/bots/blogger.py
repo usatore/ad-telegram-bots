@@ -25,5 +25,5 @@ async def run_blogger_bot():
     await dp.start_polling(bot)
 
 
-if __name__=='__main__':
+if __name__ == "__main__":
     asyncio.run(run_blogger_bot())
