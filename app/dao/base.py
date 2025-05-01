@@ -16,7 +16,7 @@ class BaseDAO:
 
             result = await session.execute(query)
 
-            #   return result.mappings().all()
+            #return result.mappings().all()
             return result.scalars().all()
 
     @classmethod

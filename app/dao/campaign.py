@@ -33,6 +33,7 @@ class CampaignDAO(BaseDAO):
             )
             session.add(new_campaign)
             await session.commit()
+            await session.refresh(new_campaign)
             return new_campaign
 
     @classmethod

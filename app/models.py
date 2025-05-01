@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Boolean, JSON, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, Boolean, JSON, DateTime, BigInteger
 from sqlalchemy.orm import relationship, validates
 from datetime import datetime
 
@@ -9,7 +9,7 @@ class Company(Base):
     __tablename__ = "company"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    telegram_id = Column(Integer, nullable=False)
+    telegram_id = Column(BigInteger, nullable=False)
     money_balance = Column(Integer, default=0)
 
     campaigns = relationship("Campaign", back_populates="company")
@@ -20,7 +20,7 @@ class Campaign(Base):
     __tablename__ = "campaign"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    company_id = Column(Integer, ForeignKey("company.id"))
+    company_id = Column(BigInteger, ForeignKey("company.id"))
     description = Column(JSON, nullable=False)
     view_price = Column(Integer, nullable=False)
     approved = Column(Boolean, default=False, nullable=False)
@@ -33,7 +33,7 @@ class Blogger(Base):
     __tablename__ = "blogger"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    telegram_id = Column(Integer, nullable=False)
+    telegram_id = Column(BigInteger, nullable=False)
     profile_links = Column(JSON, default=list)
     money_balance = Column(Integer, default=0)
     approved = Column(Boolean, default=False, nullable=False)

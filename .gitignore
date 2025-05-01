@@ -1,7 +1,7 @@
 .idea/
 .env-non-dev
 .env
-.venv
+.venv/
 env/
 venv/
 ENV/

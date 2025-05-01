@@ -17,7 +17,7 @@ from app.utils.admin_chat import create_integration_admin_message
 router = Router()
 
 
-@router.callback_query(F.data.startswith("create_integration_for:"))
+@router.callback_query(F.data.startswith("create_integration:"))
 async def create_integration(callback: CallbackQuery, bot: Bot, state: FSMContext):
     """Обработчик для начала процесса интеграции между блоггером и кампанией."""
     try:

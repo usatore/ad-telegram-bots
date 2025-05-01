@@ -100,12 +100,13 @@ def create_profile_links_admin_message(
 
 
 def create_campaign_admin_message(
-    campaign: Campaign,
-    company: Company,
+    campaign_id: int,
+    company_id: int,
     telegram_id: int,
     username: str,
     full_name: str,
     description: dict,
+    view_price: int,
 ) -> tuple[str, InlineKeyboardMarkup]:
     """
     Формирует сообщение и клавиатуру для отправки в админский чат.
@@ -124,11 +125,11 @@ def create_campaign_admin_message(
 
     # Формируем текст сообщения
     admin_message = (
-        f"Новая кампания на проверку (ID: {campaign.id})\n"
+        f"Новая кампания на проверку (ID: {campaign_id})\n"
         f"Пользователь: @{username or 'не указан'} ({full_name or 'не указан'})\n"
         f"Telegram ID: {telegram_id}\n"
-        f"Компания ID: {company.id}\n"
-        f"Цена за просмотр: {campaign.view_price} руб.\n"
+        f"Компания ID: {company_id}\n"
+        f"Цена за просмотр: {view_price} руб.\n"
         f"Детали кампании:\n"
         f"- Тип контента: {description.get('content_type', 'не указан')}\n"
         f"- Соцсети: {description.get('social_networks', 'не указаны')}\n"
@@ -141,10 +142,10 @@ def create_campaign_admin_message(
 
     # Создаем кнопки
     approve_button = InlineKeyboardButton(
-        text="Принять", callback_data=f"approve_campaign:{campaign.id}"
+        text="Принять", callback_data=f"approve_campaign:{campaign_id}"
     )
     reject_button = InlineKeyboardButton(
-        text="Отказать", callback_data=f"reject_campaign:{campaign.id}"
+        text="Отказать", callback_data=f"reject_campaign:{campaign_id}"
     )
 
     admin_markup = InlineKeyboardMarkup(

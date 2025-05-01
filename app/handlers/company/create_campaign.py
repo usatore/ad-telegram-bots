@@ -15,6 +15,12 @@ from app.config import settings
 
 router = Router()
 
+@router.callback_query(F.data == 'create_campaign')
+async def create_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
+    await callback.answer()
+    await state.set_state(CampaignCreationStates.waiting_for_content_type)
+    await callback.message.answer("Последовательно заполните данные об анкете. \n Укажите типы контента")
+
 
 @router.message(CampaignCreationStates.waiting_for_content_type)
 async def process_content_type(message: Message, state: FSMContext):
@@ -103,7 +109,7 @@ async def process_view_price(message: Message, state: FSMContext):
     F.data == "submit_for_check",
 )
 async def process_check_submission(
-    bot: Bot, callback: CallbackQuery, state: FSMContext
+    callback: CallbackQuery, state: FSMContext
 ):
 
     await callback.answer()
@@ -128,20 +134,23 @@ async def process_check_submission(
         view_price=view_price,
     )
 
+    campaign_id = campaign.id
+
     username = callback.from_user.username
     full_name = callback.from_user.full_name
 
     # Формируем сообщение и клавиатуру для админского чата
     admin_message, admin_markup = create_campaign_admin_message(
-        campaign=campaign,
-        company=company,
+        campaign_id=campaign_id,
+        company_id=company.id,
         telegram_id=telegram_id,
         username=username,
         full_name=full_name,
         description=description,
+        view_price=view_price
     )
 
-    await bot.send_message(
+    await callback.bot.send_message(
         chat_id=settings.ADMIN_CHAT_ID, text=admin_message, reply_markup=admin_markup
     )
 
