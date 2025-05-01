@@ -81,7 +81,7 @@ async def process_input_reason_and_delete_campaign(
         await message.answer("Кампания не найдена или уже удалена.")
         return
 
-    # Находим компанию для уведомления пользователя
+    # Находим компанию для уведомления компании
     company = await CompanyDAO.get_one_or_none(id=campaign.company_id)
     if company:
         await bot.send_message(

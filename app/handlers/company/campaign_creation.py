@@ -1,4 +1,4 @@
-from aiogram import Router, Bot
+from aiogram import Router, Bot, F
 from aiogram.types import (
     Message,
     InlineKeyboardButton,
@@ -100,7 +100,7 @@ async def process_view_price(message: Message, state: FSMContext):
 # Обработчик нажатия на кнопку
 @router.callback_query(
     CampaignCreationStates.waiting_for_check_submission,
-    callback_data="submit_for_check",
+    F.data == "submit_for_check",
 )
 async def process_check_submission(
     bot: Bot, callback: CallbackQuery, state: FSMContext

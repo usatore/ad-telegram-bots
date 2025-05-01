@@ -7,7 +7,7 @@ class Settings(BaseSettings):
 
     ADMIN_CHAT_ID: int
 
-    ADMIN_IDS: list
+    ADMIN_IDS: list[int]
 
     DB_HOST: str
     DB_PORT: int
@@ -30,3 +30,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+print(settings.ADMIN_IDS)
