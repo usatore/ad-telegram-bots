@@ -93,6 +93,18 @@ class IntegrationDAO(BaseDAO):
             await session.commit()
             return integration
 
+    @classmethod
+    @dao_exception_handler(Integration)
+    async def update_materials(cls, integration_id: int, materials: dict):
+        """
+        Обновляет материалы у интеграции.
+        """
+        async with async_session_maker() as session:
+            integration = await session.get(Integration, integration_id)
+            if integration:
+                integration.materials = materials
+                await session.commit()
+            return integration
 
 '''
     @classmethod

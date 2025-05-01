@@ -2,11 +2,57 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from app.models import Campaign, Company
 from app.config import settings
 import functools
-
+from app.models import Integration
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from app.dao.blogger import Blogger
 
 
+def create_integration_admin_message(
+        integration: Integration,
+        blogger: Blogger,
+        username: str,
+        full_name: str,
+        materials: dict
+) -> tuple[str, InlineKeyboardMarkup]:
+    """
+    Формирует сообщение и клавиатуру для отправки в админский чат о создании материалов интеграции.
+
+    Args:
+        integration: Объект интеграции (Integration).
+        blogger: Объект блоггера (Blogger).
+        username: Имя пользователя в Telegram (@username или None).
+        full_name: Полное имя пользователя (или None).
+        materials: Материалы интеграции, хранящиеся в виде словаря.
+
+    Returns:
+        Tuple[str, InlineKeyboardMarkup]: Текст сообщения и клавиатура.
+    """
+    # Формируем текст сообщения
+    admin_message = (
+        f"Новая интеграция для проверки (ID: {integration.id})\n"
+        f"Блоггер: @{username or 'не указан'} ({full_name or 'не указан'})\n"
+        f"Telegram ID: {blogger.telegram_id}\n"
+        f"Интеграция ID: {integration.id}\n"
+        f"Материалы:\n"
+        f"- Текст: {materials.get('text', 'не предоставлен')}\n"
+        f"- Видео: {materials.get('video', 'не предоставлено')}\n"
+        f"- Фото: {materials.get('photo', 'не предоставлено')}\n"
+        f"Интеграция ожидает одобрения.\n"
+    )
+
+    # Создаем кнопки для админа
+    approve_button = InlineKeyboardButton(
+        text="Одобрить", callback_data=f"approve_integration:{integration.id}"
+    )
+    reject_button = InlineKeyboardButton(
+        text="Отклонить", callback_data=f"reject_integration:{integration.id}"
+    )
+
+    admin_markup = InlineKeyboardMarkup(
+        inline_keyboard=[[approve_button, reject_button]]
+    )
+
+    return admin_message, admin_markup
 def create_profile_links_admin_message(
     blogger: Blogger,
     username: str,

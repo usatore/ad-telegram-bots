@@ -29,3 +29,8 @@ class BloggerAdminStates(StatesGroup):
 # Blogger
 class BloggerStates(StatesGroup):
     waiting_for_profile_links = State()
+
+
+class BloggerIntegrationStates(StatesGroup):
+    waiting_for_load_materials = State()
+    waiting_for_submit_materials = State()
