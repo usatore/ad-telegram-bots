@@ -131,12 +131,15 @@ async def reject_deposit(callback: CallbackQuery, bot: Bot):
         await callback.answer("❗ Транзакция не найдена.")
         return
 
+    # Получаем компанию по ID (чтобы не использовать ленивую загрузку)
+    company = await CompanyDAO.get_one_or_none(id=deposit.company_id)
+
     # Удаляем транзакцию
     await CompanyTransactionDAO.delete(id=company_transaction_id)
 
     # Уведомляем пользователя
     await bot.send_message(
-        chat_id=deposit.company.telegram_id,
+        chat_id=company.telegram_id,
         text=f"❌ Ваше пополнение на сумму {deposit.money_amount} было отклонено администратором."
     )
 
