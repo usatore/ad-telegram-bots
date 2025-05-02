@@ -5,7 +5,7 @@ from app.storage import blogger_storage
 from app.logger import logger
 
 # Импорт всех роутеров блогера
-from app.handlers.blogger.admin_chat import router as router_blogger_admin_chat
+from app.handlers.blogger.admin_chat.admin_chat import router as router_blogger_admin_chat
 from app.handlers.blogger.create_profile import router as router_blogger_create_profile
 from app.handlers.blogger.main_menu import router as router_blogger_main_menu
 from app.handlers.blogger.get_campaigns import router as router_blogger_get_campaigns

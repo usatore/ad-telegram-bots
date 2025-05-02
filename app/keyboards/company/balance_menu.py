@@ -27,7 +27,7 @@ def get_balance_menu_keyboard(company_id: int, balance: int) -> InlineKeyboardMa
             ],
             [
                 InlineKeyboardButton(
-                    text="⬅️ Назад в меню",
+                    text="⬅️ Главное меню",
                     callback_data='main_menu',
                 )
             ],

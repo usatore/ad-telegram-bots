@@ -9,7 +9,8 @@ from app.handlers.company.main_menu import router as router_company_main_menu
 from app.handlers.company.get_campaigns import router as router_company_get_campaigns
 from app.handlers.company.create_campaign import router as router_company_create_campaign
 from app.handlers.company.balance import router as router_balance
-from app.handlers.company.admin_chat import router as router_company_admin_chat
+from app.handlers.company.admin_chat.admin_chat import router as router_company_admin_chat
+from app.handlers.company.add_deposit import router as router_add_deposit
 
 async def run_company_bot():
     try:
@@ -24,6 +25,8 @@ async def run_company_bot():
             router_company_create_campaign,
             router_company_admin_chat,
             router_balance,
+            router_add_deposit,
+
         )
         logger.info("✅ Роутеры компании успешно подключены.")
 

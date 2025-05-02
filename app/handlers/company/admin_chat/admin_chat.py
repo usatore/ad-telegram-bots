@@ -5,6 +5,7 @@ from app.dao.campaign import CampaignDAO
 from aiogram.fsm.context import FSMContext
 from app.states.states import CompanyAdminStates
 from app.utils.admin_chat import for_admin
+from app.dao.company_transaction import CompanyTransactionDAO
 
 router = Router()
 
@@ -91,3 +92,53 @@ async def process_input_reason_and_delete_campaign(
         f"Кампания (ID: {campaign_id}) отклонена и удалена по причине: {message.text}"
     )
     await state.clear()
+
+
+@router.callback_query(F.data.startswith("approve_deposit:"))
+async def approve_deposit(callback: CallbackQuery, bot: Bot):
+    company_transaction_id = int(callback.data.split(":")[1])
+
+    # Получаем транзакцию
+    deposit = await CompanyTransactionDAO.get_one_or_none(id=company_transaction_id)
+    if not deposit:
+        await callback.answer("❗ Транзакция не найдена.")
+        return
+
+    # Подтверждаем транзакцию
+    await CompanyTransactionDAO.approve_deposit(transaction_id=company_transaction_id)
+
+    company_id = deposit.company_id
+
+    company = await CompanyDAO.get_one_or_none(id=company_id)
+
+    # Уведомляем пользователя
+    await bot.send_message(
+        chat_id=company.telegram_id,
+        text=f"✅ Ваше пополнение на сумму {deposit.money_amount} было подтверждено администратором"
+    )
+
+    await callback.answer("✅ Пополнение подтверждено.")
+    await callback.message.edit_reply_markup()
+
+
+@router.callback_query(F.data.startswith("reject_deposit:"))
+async def reject_deposit(callback: CallbackQuery, bot: Bot):
+    company_transaction_id = int(callback.data.split(":")[1])
+
+    # Получаем транзакцию
+    deposit = await CompanyTransactionDAO.get_one_or_none(id=company_transaction_id)
+    if not deposit:
+        await callback.answer("❗ Транзакция не найдена.")
+        return
+
+    # Удаляем транзакцию
+    await CompanyTransactionDAO.delete(id=company_transaction_id)
+
+    # Уведомляем пользователя
+    await bot.send_message(
+        chat_id=deposit.company.telegram_id,
+        text=f"❌ Ваше пополнение на сумму {deposit.money_amount} было отклонено администратором."
+    )
+
+    await callback.answer("❌ Пополнение отклонено.")
+    await callback.message.edit_reply_markup()

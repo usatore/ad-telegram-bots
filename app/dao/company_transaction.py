@@ -17,14 +17,14 @@ class CompanyTransactionDAO(BaseDAO):
         Баланс изменится только после одобрения транзакции.
         """
         async with async_session_maker() as session:
-            new_transaction = CompanyTransaction(
+            deposit = CompanyTransaction(
                 company_id=company_id,
                 money_amount=money_amount,
                 transaction_type=True,  # True — пополнение (deposit)
             )
-            session.add(new_transaction)
+            session.add(deposit)
             await session.commit()
-            return new_transaction
+            return deposit
 
     @classmethod
     @dao_exception_handler(CompanyTransaction)

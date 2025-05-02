@@ -78,9 +78,7 @@ class CompanyTransaction(Base):
     id = Column(Integer, primary_key=True)
     company_id = Column(Integer, ForeignKey("company.id"), nullable=False)
     money_amount = Column(Integer, nullable=False)
-    transaction_type = Column(
-        Boolean, nullable=False
-    )  # Тип транзакции (True - пополнение, False - расход)
+    transaction_type = Column(Boolean, nullable=False)  # Тип транзакции (True - пополнение, False - расход)
     approved = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now)
 
