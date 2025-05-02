@@ -20,7 +20,7 @@ class Campaign(Base):
     __tablename__ = "campaign"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    company_id = Column(BigInteger, ForeignKey("company.id"))
+    company_id = Column(Integer, ForeignKey("company.id"))
     description = Column(JSON, nullable=False)
     view_price = Column(Integer, nullable=False)
     approved = Column(Boolean, default=False, nullable=False)

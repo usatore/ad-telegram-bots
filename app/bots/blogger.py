@@ -16,7 +16,7 @@ async def run_blogger_bot():
         bot = Bot(token=settings.BLOGGER_BOT_TOKEN)
         dp = Dispatcher(storage=blogger_storage)
 
-        # Логируем подключение роутеров
+
         logger.info("🚀 Подключение роутеров блогера...")
         dp.include_routers(
             router_blogger_admin_chat,
@@ -26,7 +26,7 @@ async def run_blogger_bot():
         )
         logger.info("✅ Роутеры блогера успешно подключены.")
 
-        # Логируем запуск опроса
+
         logger.info("Запуск опроса бота...")
         await dp.start_polling(bot)
         logger.info("✅ Опрос бота запущен.")

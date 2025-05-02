@@ -30,7 +30,7 @@ class BaseDAO:
             result = await session.execute(query)
 
             #   return result.mappings().one_or_none()
-            return result.scalars().one_or_none()
+            return result.scalar_one_or_none()
 
     @classmethod
     @dao_exception_handler(model)

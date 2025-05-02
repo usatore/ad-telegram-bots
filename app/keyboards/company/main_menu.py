@@ -1,7 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def get_main_menu_keyboard(company_id: int) -> InlineKeyboardMarkup:
+def get_main_menu_keyboard(company_id: int, balance: int) -> InlineKeyboardMarkup:
+
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -15,7 +16,7 @@ def get_main_menu_keyboard(company_id: int) -> InlineKeyboardMarkup:
                     text="➕ Создать кампанию", callback_data="create_campaign"
                 )
             ],
-            [InlineKeyboardButton(text="💰 Баланс и финансы", callback_data="balance")],
+            [InlineKeyboardButton(text=f"💰 Баланс {balance}", callback_data="balance_menu")],
             [InlineKeyboardButton(text="📊 Статистика", callback_data="stats")],
             [
                 InlineKeyboardButton(

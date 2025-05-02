@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from app.logger import logger
+
 
 
 class Settings(BaseSettings):
@@ -29,15 +29,4 @@ class Settings(BaseSettings):
     )
 
 
-try:
-    settings = Settings()
-    logger.info("✅ Настройки успешно загружены из .env")
-    logger.debug(f"DB_HOST: {settings.DB_HOST}, DB_PORT: {settings.DB_PORT}")
-    logger.debug(
-        f"REDIS_HOST: {settings.REDIS_HOST}, REDIS_PORT: {settings.REDIS_PORT}"
-    )
-    logger.debug(f"ADMIN_CHAT_ID: {settings.ADMIN_CHAT_ID}")
-    logger.debug(f"ADMIN_IDS: {settings.ADMIN_IDS}")
-except Exception:
-    logger.exception("❌ Ошибка при загрузке настроек из .env")
-    raise
+settings = Settings()

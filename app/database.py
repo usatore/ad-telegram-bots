@@ -3,7 +3,7 @@ from sqlalchemy.orm import DeclarativeBase
 from app.config import settings
 from app.logger import logger
 
-# Логируем подключение к базе данных
+
 logger.info("Подключение к базе данных...")
 try:
     engine = create_async_engine(settings.DB_URL, echo=True)  # echo=True для SQL-логов
