@@ -44,10 +44,10 @@ class BloggerDAO(BaseDAO):
                 await session.commit()
             return blogger
 
-    '''
+
     @classmethod
     @dao_exception_handler(model)
-    async def update_blogger_profile_links(
+    async def update_profile_links(
         cls, blogger_id: int, new_profile_links: list
     ):
         """
@@ -61,4 +61,4 @@ class BloggerDAO(BaseDAO):
             blogger.profile_links = new_profile_links
             await session.commit()
             return blogger
-    '''
+

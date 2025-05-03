@@ -6,10 +6,10 @@ from aiogram.types import (
     CallbackQuery,
 )
 from aiogram.fsm.context import FSMContext
-from app.states.states import CampaignCreationStates
+from app.states.company import CompanyCreateCampaign
 from app.dao.company import CompanyDAO
 from app.dao.campaign import CampaignDAO
-from app.utils.admin_chat import create_campaign_admin_message
+from app.messages.admin_chat import create_campaign_admin_message
 from app.config import settings
 
 
@@ -19,79 +19,79 @@ router = Router()
 @router.callback_query(F.data == "create_campaign")
 async def create_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
     await callback.answer()
-    await state.set_state(CampaignCreationStates.waiting_for_content_type)
+    await state.set_state(CompanyCreateCampaign.waiting_for_content_type)
     await callback.message.answer(
         "Последовательно заполните данные об анкете. \n Укажите типы контента"
     )
 
 
-@router.message(CampaignCreationStates.waiting_for_content_type)
+@router.message(CompanyCreateCampaign.waiting_for_content_type)
 async def process_content_type(message: Message, state: FSMContext):
     content_type = message.text
     await state.update_data(content_type=content_type)
-    await state.set_state(CampaignCreationStates.waiting_for_social_networks)
+    await state.set_state(CompanyCreateCampaign.waiting_for_social_networks)
     await message.answer("Выберите социальные сети:")
 
 
-@router.message(CampaignCreationStates.waiting_for_social_networks)
+@router.message(CompanyCreateCampaign.waiting_for_social_networks)
 async def process_social_networks(message: Message, state: FSMContext):
     social_networks = message.text
     await state.update_data(social_networks=social_networks)
-    await state.set_state(CampaignCreationStates.waiting_for_audience_priority)
+    await state.set_state(CompanyCreateCampaign.waiting_for_audience_priority)
     await message.answer("Выберите приоритет по аудитории (Мужская/Женская):")
 
 
-@router.message(CampaignCreationStates.waiting_for_audience_priority)
+@router.message(CompanyCreateCampaign.waiting_for_audience_priority)
 async def process_audience_priority(message: Message, state: FSMContext):
     audience_priority = message.text
     await state.update_data(audience_priority=audience_priority)
-    await state.set_state(CampaignCreationStates.waiting_for_product_type)
+    await state.set_state(CompanyCreateCampaign.waiting_for_product_type)
     await message.answer(
         "Что за продукт? (Например: Бренд одежды, Hr бренд или Салон красоты):"
     )
 
 
-@router.message(CampaignCreationStates.waiting_for_product_type)
+@router.message(CompanyCreateCampaign.waiting_for_product_type)
 async def process_product_type(message: Message, state: FSMContext):
     product_type = message.text
     await state.update_data(product_type=product_type)
-    await state.set_state(CampaignCreationStates.waiting_for_website_link)
+    await state.set_state(CompanyCreateCampaign.waiting_for_website_link)
     await message.answer("Введите ссылку на сайт или соцсеть (если есть):")
 
 
-@router.message(CampaignCreationStates.waiting_for_website_link)
+@router.message(CompanyCreateCampaign.waiting_for_website_link)
 async def process_website_link(message: Message, state: FSMContext):
     website_link = message.text
     await state.update_data(website_link=website_link)
-    await state.set_state(CampaignCreationStates.waiting_for_contact_method)
+    await state.set_state(CompanyCreateCampaign.waiting_for_contact_method)
     await message.answer("Укажите способ связи (номер, почта или другое):")
 
 
-@router.message(CampaignCreationStates.waiting_for_contact_method)
+@router.message(CompanyCreateCampaign.waiting_for_contact_method)
 async def process_contact_method(message: Message, state: FSMContext):
     contact_method = message.text
     await state.update_data(contact_method=contact_method)
-    await state.set_state(CampaignCreationStates.waiting_for_advertising_style)
+    await state.set_state(CompanyCreateCampaign.waiting_for_advertising_style)
     await message.answer(
         "Как вы хотите подавать информацию? (Нативно, рекомендация или детальный рассказ о продукте):"
     )
 
 
-@router.message(CampaignCreationStates.waiting_for_advertising_style)
+@router.message(CompanyCreateCampaign.waiting_for_advertising_style)
 async def process_advertising_style(message: Message, state: FSMContext):
     advertising_style = message.text
     await state.update_data(advertising_style=advertising_style)
-    await state.set_state(CampaignCreationStates.waiting_for_view_price)
+    await state.set_state(CompanyCreateCampaign.waiting_for_view_price)
     await message.answer(
         "Сколько вы платите за 1 просмотр? (Рекомендуем поставить 2р за просмотр):"
     )
 
 
-@router.message(CampaignCreationStates.waiting_for_view_price)
+@router.message(CompanyCreateCampaign.waiting_for_view_price)
 async def process_view_price(message: Message, state: FSMContext):
     view_price = message.text
     await state.update_data(view_price=view_price)
-    await state.set_state(CampaignCreationStates.waiting_for_check_submission)
+    await state.set_state(CompanyCreateCampaign.waiting_for_check_submission)
 
     check_submission_button = InlineKeyboardButton(
         text="Отправить на проверку", callback_data="submit_for_check"
@@ -108,7 +108,7 @@ async def process_view_price(message: Message, state: FSMContext):
 
 # Обработчик нажатия на кнопку
 @router.callback_query(
-    CampaignCreationStates.waiting_for_check_submission,
+    CompanyCreateCampaign.waiting_for_check_submission,
     F.data == "submit_for_check",
 )
 async def process_check_submission(callback: CallbackQuery, state: FSMContext):

@@ -7,7 +7,7 @@ from app.keyboards.company.main_menu import get_main_menu_keyboard
 router = Router()
 
 @router.callback_query(F.data == "main_menu")
-async def on_main_menu_callback(callback: CallbackQuery):
+async def back_to_main_menu(callback: CallbackQuery):
     await callback.answer()
 
     company = await CompanyDAO.get_one_or_none(telegram_id=callback.from_user.id)

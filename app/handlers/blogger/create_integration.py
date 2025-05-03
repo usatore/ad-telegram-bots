@@ -10,9 +10,8 @@ from app.dao.blogger import BloggerDAO
 from app.dao.campaign import CampaignDAO
 from app.config import settings
 from aiogram.fsm.context import FSMContext
-from app.states.states import BloggerIntegrationStates
-from app.dao.company import CompanyDAO
-from app.utils.admin_chat import create_integration_admin_message
+from app.states.blogger import BloggerCreateIntegration
+from app.messages.admin_chat import create_integration_admin_message
 
 router = Router()
 
@@ -52,7 +51,7 @@ async def create_integration(callback: CallbackQuery, bot: Bot, state: FSMContex
         await callback.answer("Не удалось создать интеграцию.")
         return
 
-    await state.set_state(BloggerIntegrationStates.waiting_for_load_materials)
+    await state.set_state(BloggerCreateIntegration.waiting_for_load_materials)
     await state.update_data(blogger_id=blogger_id, campaign_id=campaign_id)
 
     await callback.answer(
@@ -60,7 +59,7 @@ async def create_integration(callback: CallbackQuery, bot: Bot, state: FSMContex
     )
 
 
-@router.message(BloggerIntegrationStates.waiting_for_load_materials)
+@router.message(BloggerCreateIntegration.waiting_for_load_materials)
 async def process_materials(message: Message, state: FSMContext):
     """Обрабатывает материалы, отправленные блоггером для интеграции."""
     data = await state.get_data()
@@ -97,18 +96,14 @@ async def process_materials(message: Message, state: FSMContext):
     )
 
 
-@router.callback_query(
-    BloggerIntegrationStates.waiting_for_load_materials,
-    F.data == "submit_for_materials",
-)
-async def process_check_submission(
-    bot: Bot, callback: CallbackQuery, state: FSMContext
-):
+@router.callback_query(F.data == "submit_for_materials")
+async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
     """Обработчик кнопки отправки на проверку."""
     await callback.answer()
 
     data = await state.get_data()
     materials = data.get("materials", {})
+    message_id = data.get("materials_message_id")  # ID сообщения с материалами
 
     blogger_id = data.get("blogger_id")
     campaign_id = data.get("campaign_id")
@@ -119,7 +114,6 @@ async def process_check_submission(
         )
         return
 
-    # Получаем интеграцию по blogger_id и campaign_id
     integration = await IntegrationDAO.get_one_or_none(
         blogger_id=blogger_id, campaign_id=campaign_id
     )
@@ -128,91 +122,42 @@ async def process_check_submission(
         await callback.message.edit_text("Интеграция не найдена.")
         return
 
-    # Обновляем материалы
-    updated_integration = await IntegrationDAO.update_materials(
+    await IntegrationDAO.update_materials(
         integration_id=integration.id, materials=materials
     )
 
-    if not updated_integration:
-        await callback.message.edit_text("Не удалось обновить материалы интеграции.")
-        return
-
-    # Получаем компанию через интеграцию
-    company = await CompanyDAO.get_one_or_none(id=integration.company_id)
     campaign = await CampaignDAO.get_one_or_none(id=integration.campaign_id)
 
-    # Формируем сообщение для админов с кнопками
-    accept_button = InlineKeyboardButton(
-        text="Принять", callback_data=f"approve_{integration.id}"
-    )
-    reject_button = InlineKeyboardButton(
-        text="Отказать", callback_data=f"reject_{integration.id}"
-    )
-
-    admin_markup = InlineKeyboardMarkup(
-        inline_keyboard=[[accept_button, reject_button]]
+    admin_text, admin_markup = create_integration_admin_message(
+        username=callback.from_user.username,
+        full_name=callback.from_user.full_name,
+        integration_id=integration.id,
+        campaign_id=campaign.id,
+        description=campaign.description,
+        materials=materials
     )
 
-    admin_message = (
-        f"Новая интеграция для проверки:\n\n"
-        f"Блоггер: @{callback.from_user.username}\n"
-        f"Полное имя: {callback.from_user.full_name}\n\n"
-        f"Кампания: {campaign.name}\n"
-        f"ТЗ кампании: {campaign.description}\n\n"
-        f"Интеграция ID: {integration.id}\n"
-        f"Статус: Ожидает проверки"
+    # Пересылаем сообщение с материалами в админ-чат
+    if message_id:
+        try:
+            await callback.bot.forward_message(
+                chat_id=settings.ADMIN_CHAT_ID,
+                from_chat_id=callback.message.chat.id,
+                message_id=message_id
+            )
+        except Exception as e:
+            await callback.message.answer(f"Не удалось переслать сообщение с материалами: {e}")
+
+    # Отправляем сообщение с описанием интеграции и кнопками
+    await callback.bot.send_message(
+        chat_id=settings.ADMIN_CHAT_ID,
+        text=admin_text,
+        reply_markup=admin_markup
     )
 
-    await bot.send_message(
-        chat_id=settings.ADMIN_CHAT_ID, text=admin_message, reply_markup=admin_markup
-    )
-
-    # Очищаем состояние
     await state.clear()
 
     await callback.message.edit_text(
         "Материалы успешно отправлены на проверку. Ожидайте ответа."
     )
 
-
-@router.callback_query(F.data.startswith("approve_"))
-async def approve_integration_materials(callback: CallbackQuery, bot: Bot):
-    """Обработчик принятия интеграции."""
-    integration_id = int(callback.data.split("_")[1])
-
-    # Обновляем статус интеграции на "Принята"
-    integration = await IntegrationDAO.get_one_or_none(id=integration_id)
-    if integration:
-        await IntegrationDAO.update_integration_status(integration_id, "accepted")
-        await callback.answer("Интеграция принята!")
-    else:
-        await callback.answer("Интеграция не найдена.")
-
-    await callback.message.delete()
-
-
-@router.callback_query(F.data.startswith("reject_"))
-async def reject_integration(callback: CallbackQuery, bot: Bot):
-    """Обработчик отказа от интеграции с указанием причины."""
-    integration_id = int(callback.data.split("_")[1])
-
-    # Запрашиваем причину отказа
-    await callback.message.edit_text("Укажите причину отказа:")
-
-    # Обработчик сообщения с причиной отказа
-    @router.message(BloggerIntegrationStates.waiting_for_rejection_reason)
-    async def process_rejection_reason(message: Message, state: FSMContext):
-        rejection_reason = message.text
-
-        # Обновляем статус интеграции на "Отказана" и добавляем причину
-        integration = await IntegrationDAO.get_one_or_none(id=integration_id)
-        if integration:
-            await IntegrationDAO.update_integration_status(
-                integration_id, "rejected", rejection_reason
-            )
-            await message.answer(f"Интеграция отклонена по причине: {rejection_reason}")
-        else:
-            await message.answer("Интеграция не найдена.")
-
-        # Очищаем состояние
-        await state.clear()

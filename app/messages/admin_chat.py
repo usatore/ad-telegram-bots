@@ -6,6 +6,47 @@ from app.models import Integration
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from app.dao.blogger import Blogger
 
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+
+def create_integration_admin_message(
+        username: str,
+        full_name: str,
+        integration_id: int,
+        campaign_id: int,
+        description: dict,
+        materials: dict,
+) -> tuple[str, InlineKeyboardMarkup]:
+    desc_lines = [f"{key}: {value}" for key, value in description.items()]
+    mat_lines = [f"{key}: {value}" for key, value in materials.items()]
+
+    admin_text = (
+            f"Новая интеграция для проверки:\n\n"
+            f"Блоггер: @{username}\n"
+            f"Полное имя: {full_name}\n\n"
+            f"Кампания ID: {campaign_id}\n"
+            f"ТЗ кампании:\n" + "\n".join(desc_lines) + "\n\n"
+                                                        f"Материалы:\n" + "\n".join(mat_lines) + "\n\n"
+                                                                                                 f"Интеграция ID: {integration_id}\n"
+                                                                                                 f"Статус: Ожидает проверки"
+    )
+
+    accept_button = InlineKeyboardButton(
+        text="✅ Принять",
+        callback_data=f"approve_integration_materials:{integration_id}"
+    )
+    reject_button = InlineKeyboardButton(
+        text="❌ Отклонить",
+        callback_data=f"reject_integration:{integration_id}"
+    )
+
+    admin_markup = InlineKeyboardMarkup(inline_keyboard=[[accept_button, reject_button]])
+
+    return admin_text, admin_markup
+
+
+
+
 
 def create_deposit_admin_message(
     company_transaction_id: int,
@@ -53,56 +94,10 @@ def create_deposit_admin_message(
     return admin_message, admin_markup
 
 
-def create_integration_admin_message(
-    integration: Integration,
-    blogger: Blogger,
-    username: str,
-    full_name: str,
-    materials: dict,
-) -> tuple[str, InlineKeyboardMarkup]:
-    """
-    Формирует сообщение и клавиатуру для отправки в админский чат о создании материалов интеграции.
-
-    Args:
-        integration: Объект интеграции (Integration).
-        blogger: Объект блоггера (Blogger).
-        username: Имя пользователя в Telegram (@username или None).
-        full_name: Полное имя пользователя (или None).
-        materials: Материалы интеграции, хранящиеся в виде словаря.
-
-    Returns:
-        Tuple[str, InlineKeyboardMarkup]: Текст сообщения и клавиатура.
-    """
-    # Формируем текст сообщения
-    admin_message = (
-        f"Новая интеграция для проверки (ID: {integration.id})\n"
-        f"Блоггер: @{username or 'не указан'} ({full_name or 'не указан'})\n"
-        f"Telegram ID: {blogger.telegram_id}\n"
-        f"Интеграция ID: {integration.id}\n"
-        f"Материалы:\n"
-        f"- Текст: {materials.get('text', 'не предоставлен')}\n"
-        f"- Видео: {materials.get('video', 'не предоставлено')}\n"
-        f"- Фото: {materials.get('photo', 'не предоставлено')}\n"
-        f"Интеграция ожидает одобрения.\n"
-    )
-
-    # Создаем кнопки для админа
-    approve_button = InlineKeyboardButton(
-        text="Одобрить", callback_data=f"approve_integration:{integration.id}"
-    )
-    reject_button = InlineKeyboardButton(
-        text="Отклонить", callback_data=f"reject_integration:{integration.id}"
-    )
-
-    admin_markup = InlineKeyboardMarkup(
-        inline_keyboard=[[approve_button, reject_button]]
-    )
-
-    return admin_message, admin_markup
-
 
 def create_profile_links_admin_message(
-    blogger: Blogger,
+    blogger_id: int,
+    telegram_id: int,
     username: str,
     full_name: str,
     profile_links: list[str],
@@ -123,19 +118,19 @@ def create_profile_links_admin_message(
 
     # Формируем текст сообщения
     admin_message = (
-        f"Новая заявка на профиль блоггера (ID: {blogger.id})\n"
+        f"Новая заявка на профиль блоггера (ID: {blogger_id})\n"
         f"Пользователь: @{username or 'не указан'} ({full_name or 'не указан'})\n"
-        f"Telegram ID: {blogger.telegram_id}\n"
+        f"Telegram ID: {telegram_id}\n"
         f"Ссылки на профили:\n" + "\n".join(profile_links) + "\n"
         f"Профиль ожидает одобрения.\n"
     )
 
     # Создаем кнопки
     approve_button = InlineKeyboardButton(
-        text="Одобрить", callback_data=f"approve_blogger:{blogger.id}"
+        text="Одобрить", callback_data=f"approve_blogger:{blogger_id}"
     )
     reject_button = InlineKeyboardButton(
-        text="Отклонить", callback_data=f"reject_blogger:{blogger.id}"
+        text="Отклонить", callback_data=f"reject_blogger:{blogger_id}"
     )
 
     admin_markup = InlineKeyboardMarkup(

@@ -14,20 +14,17 @@ router = Router()
 
 
 # Хендлер для кнопки "Получить кампании для блоггера"
-@router.callback_query(F.data.startswith("get_campaigns_for_blogger:"))
-async def get_campaigns_for_blogger(callback: CallbackQuery, bot: Bot):
+@router.callback_query(F.data.startswith("get_campaigns"))
+async def get_campaigns(callback: CallbackQuery, bot: Bot):
     """Обработчик для получения доступных рекламных кампаний для блоггера."""
-    # Извлекаем blogger_id из данных callback
-    try:
-        blogger_id = int(callback.data.split(":")[1])
-    except (IndexError, ValueError):
-        await callback.answer("Некорректный формат данных.")
+
+    blogger = await BloggerDAO.get_one_or_none(telegram_id=callback.from_user.id)
+    if not blogger:
+        await callback.answer("Вы еще не создали профиль блоггера. Отправьте ссылки на проверку")
         return
 
-    # Получаем блоггера по ID
-    blogger = await BloggerDAO.get_one_or_none(id=blogger_id)
-    if not blogger:
-        await callback.answer("Блоггер не найден.")
+    if not blogger.approved:
+        await callback.answer("Ваши ссылки проверяются администратором, ожидайте...")
         return
 
     # Получаем кампании, которые доступны для блоггера
@@ -43,7 +40,7 @@ async def get_campaigns_for_blogger(callback: CallbackQuery, bot: Bot):
         # Формируем кнопку для интеграции
         integration_button = InlineKeyboardButton(
             text=f"Сделать интеграцию с кампанией {campaign.id}",
-            callback_data=f"create_integration_for:{blogger.id}:{campaign.id}",  # Данные для создания интеграции
+            callback_data=f"create_integration:{blogger.id}:{campaign.id}",  # Данные для создания интеграции
         )
 
         # Создаем клавиатуру с кнопкой

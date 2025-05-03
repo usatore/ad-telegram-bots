@@ -14,7 +14,6 @@ class IntegrationDAO(BaseDAO):
         cls,
         blogger_id: int,
         campaign_id: int,
-        materials: dict,
     ):
         """
         Создаёт интеграцию между блоггером и кампанией.
@@ -45,7 +44,6 @@ class IntegrationDAO(BaseDAO):
             new_integration = Integration(
                 blogger_id=blogger_id,
                 campaign_id=campaign_id,
-                materials=materials,
             )
 
             session.add(new_integration)
