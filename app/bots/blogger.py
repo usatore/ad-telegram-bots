@@ -5,11 +5,13 @@ from app.storage import blogger_storage
 from app.logger import logger
 
 # Импорт всех роутеров блогера
-from app.handlers.blogger.admin_chat.new_blogger import router as router_blogger_admin_chat
+from app.handlers.blogger.admin_chat.new_blogger import router as router_blogger_admin_chat_new_blogger
+from app.handlers.blogger.admin_chat.new_integration import router as router_blogger_admin_chat_new_integration
 from app.handlers.blogger.create_profile import router as router_blogger_create_profile
 from app.handlers.blogger.main_menu import router as router_blogger_main_menu
 from app.handlers.blogger.get_campaigns import router as router_blogger_get_campaigns
 from app.handlers.blogger.create_integration import router as router_blogger_create_integration
+
 
 async def run_blogger_bot():
     try:
@@ -19,7 +21,8 @@ async def run_blogger_bot():
 
         logger.info("🚀 Подключение роутеров блогера...")
         dp.include_routers(
-            router_blogger_admin_chat,
+            router_blogger_admin_chat_new_blogger,
+            router_blogger_admin_chat_new_integration,
             router_blogger_create_profile,
             router_blogger_main_menu,
             router_blogger_get_campaigns,

@@ -3,7 +3,7 @@ from aiogram import Router, Bot, F
 from aiogram.fsm.context import FSMContext
 from app.dao.blogger import BloggerDAO
 from app.states.admin import AdminRejectBlogger
-from app.messages.admin_chat import for_admin
+
 
 router = Router()
 
@@ -41,7 +41,7 @@ async def reject_blogger(callback: CallbackQuery, state: FSMContext):
 
     blogger_id = int(callback.data.split(":")[1])
 
-    await state.set_state(AdminRejectBlogger.waiting_for_reason)
+    await state.set_state(AdminRejectBlogger.waiting_for_reason_blogger)
     await state.update_data(blogger_id=blogger_id)
 
     await callback.message.answer("✏️ Введите причину отклонения профиля блоггера:")
@@ -49,7 +49,7 @@ async def reject_blogger(callback: CallbackQuery, state: FSMContext):
     print(await state.get_state())
 
 
-@router.message(AdminRejectBlogger.waiting_for_reason)
+@router.message(AdminRejectBlogger.waiting_for_reason_blogger)
 #@for_admin
 async def process_reason_and_delete_blogger(message: Message, bot: Bot, state: FSMContext):
     print('ya v process reject reason')
