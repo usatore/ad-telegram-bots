@@ -71,7 +71,7 @@ class IntegrationDAO(BaseDAO):
 
     @classmethod
     @dao_exception_handler(Integration)
-    async def approve_integration_is_done(cls, integration_id: int):
+    async def approve_integration_done(cls, integration_id: int):
         """
         Подтверждает, что блоггер выполнил интеграцию (опубликовал контент).
         Устанавливает флаг done = True.
@@ -104,33 +104,15 @@ class IntegrationDAO(BaseDAO):
                 await session.commit()
             return integration
 
-
-'''
     @classmethod
     @dao_exception_handler(Integration)
-    async def get_integrations_for_blogger(cls, blogger_id: int):
+    async def update_publication_links(cls, integration_id: int, links: list):
         """
-        Возвращает все интеграции для конкретного блоггера.
-        """
-        async with async_session_maker() as session:
-            integrations = await session.execute(
-                select(Integration).filter(Integration.blogger_id == blogger_id)
-            )
-            return integrations.scalars().all()
-
-
- Думаю, что не приходится так как можно использовать get_all(**filter_by).
-Но если функционал расширится то пригодится.
-
-    @classmethod
-    @dao_exception_handler(Integration)
-    async def get_integrations_for_campaign(cls, campaign_id: int):
-        """
-        Возвращает все интеграции для конкретной кампании.
+        Обновляет ссылки на публикацию у интеграции.
         """
         async with async_session_maker() as session:
-            integrations = await session.execute(
-                select(Integration).filter(Integration.campaign_id == campaign_id)
-            )
-            return integrations.scalars().all()
-'''
+            integration = await session.get(Integration, integration_id)
+            if integration:
+                integration.publication_links = links
+                await session.commit()
+            return integration

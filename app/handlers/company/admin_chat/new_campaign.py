@@ -61,7 +61,8 @@ async def reject_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
 @router.message(AdminRejectCampaign.waiting_for_reason_campaign)
 # @for_admin здесь с этим декоратором-фильтра ошибка, в прицнипе это не обязательно.
 async def process_reason_and_delete_campaign(
-    message: Message, bot: Bot, state: FSMContext):
+    message: Message, bot: Bot, state: FSMContext
+):
     """
     Обработчик ввода причины отклонения кампании.
     """
@@ -86,5 +87,3 @@ async def process_reason_and_delete_campaign(
         f"Кампания (ID: {campaign_id}) отклонена и удалена по причине: {message.text}"
     )
     await state.clear()
-
-

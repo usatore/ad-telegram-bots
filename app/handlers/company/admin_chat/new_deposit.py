@@ -30,7 +30,7 @@ async def approve_deposit(callback: CallbackQuery, bot: Bot):
     # Уведомляем пользователя
     await bot.send_message(
         chat_id=company.telegram_id,
-        text=f"✅ Ваше пополнение на сумму {deposit.money_amount} было подтверждено администратором"
+        text=f"✅ Ваше пополнение на сумму {deposit.money_amount} было подтверждено администратором",
     )
 
     await callback.answer("✅ Пополнение подтверждено.")
@@ -56,7 +56,7 @@ async def reject_deposit(callback: CallbackQuery, bot: Bot):
     # Уведомляем пользователя
     await bot.send_message(
         chat_id=company.telegram_id,
-        text=f"❌ Ваше пополнение на сумму {deposit.money_amount} было отклонено администратором."
+        text=f"❌ Ваше пополнение на сумму {deposit.money_amount} было отклонено администратором.",
     )
 
     await callback.answer("❌ Пополнение отклонено.")

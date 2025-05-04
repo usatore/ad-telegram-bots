@@ -54,9 +54,7 @@ async def create_integration(callback: CallbackQuery, bot: Bot, state: FSMContex
     await state.set_state(BloggerCreateIntegration.waiting_for_load_materials)
     await state.update_data(blogger_id=blogger_id, campaign_id=campaign_id)
 
-    await callback.answer(
-        "Интеграция успешно создана. Пришлите материалы следующим сообщением"
-    )
+    await callback.message.answer("Пришлите материалы следующим сообщением")
 
 
 @router.message(BloggerCreateIntegration.waiting_for_load_materials)
@@ -68,20 +66,9 @@ async def process_materials(message: Message, state: FSMContext):
 
     materials = {}
 
-    if message.text:
-        materials["text"] = message.text
-    else:
-        materials["text"] = None
-
-    if message.photo:
-        materials["photo"] = message.photo[-1].file_id
-    else:
-        materials["photo"] = None
-
-    if message.video:
-        materials["video"] = message.video.file_id
-    else:
-        materials["video"] = None
+    materials["text"] = message.text
+    materials["photo"] = message.photo[-1].file_id
+    materials["video"] = message.video.file_id
 
     await state.update_data(materials=materials)
 
@@ -134,7 +121,7 @@ async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
         integration_id=integration.id,
         campaign_id=campaign.id,
         description=campaign.description,
-        materials=materials
+        materials=materials,
     )
 
     # Пересылаем сообщение с материалами в админ-чат
@@ -143,16 +130,16 @@ async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
             await callback.bot.forward_message(
                 chat_id=settings.ADMIN_CHAT_ID,
                 from_chat_id=callback.message.chat.id,
-                message_id=message_id
+                message_id=message_id,
             )
         except Exception as e:
-            await callback.message.answer(f"Не удалось переслать сообщение с материалами: {e}")
+            await callback.message.answer(
+                f"Не удалось переслать сообщение с материалами: {e}"
+            )
 
     # Отправляем сообщение с описанием интеграции и кнопками
     await callback.bot.send_message(
-        chat_id=settings.ADMIN_CHAT_ID,
-        text=admin_text,
-        reply_markup=admin_markup
+        chat_id=settings.ADMIN_CHAT_ID, text=admin_text, reply_markup=admin_markup
     )
 
     await state.clear()
@@ -160,4 +147,3 @@ async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         "Материалы успешно отправлены на проверку. Ожидайте ответа."
     )
-

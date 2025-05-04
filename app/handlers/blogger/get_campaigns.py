@@ -20,7 +20,9 @@ async def get_campaigns(callback: CallbackQuery, bot: Bot):
 
     blogger = await BloggerDAO.get_one_or_none(telegram_id=callback.from_user.id)
     if not blogger:
-        await callback.answer("Вы еще не создали профиль блоггера. Отправьте ссылки на проверку")
+        await callback.answer(
+            "Вы еще не создали профиль блоггера. Отправьте ссылки на проверку"
+        )
         return
 
     if not blogger.approved:

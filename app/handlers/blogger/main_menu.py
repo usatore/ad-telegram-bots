@@ -27,7 +27,6 @@ async def on_main_menu_callback(callback: CallbackQuery):
 async def get_main_menu(message: Message):
     await message.delete()
 
-
     await message.answer(
         text="\u2063",
         reply_markup=get_main_menu_keyboard(balance=1337),
@@ -36,9 +35,9 @@ async def get_main_menu(message: Message):
 
 @router.message(CommandStart())
 async def process_command_start(message: Message):
-    #blogger = await BloggerDAO.get_one_or_none(telegram_id=message.from_user.id)
-    #if not blogger:
-        #blogger = await BloggerDAO.create(telegram_id=message.from_user.id)
+    # blogger = await BloggerDAO.get_one_or_none(telegram_id=message.from_user.id)
+    # if not blogger:
+    # blogger = await BloggerDAO.create(telegram_id=message.from_user.id)
 
     main_menu_keyboard = [[KeyboardButton(text="Главное меню")]]
 

@@ -29,10 +29,12 @@ async def approve_integration_materials(callback: CallbackQuery, bot: Bot):
     if blogger:
         await bot.send_message(
             chat_id=blogger.telegram_id,
-            text=f"✅ Ваша интеграция (ID {integration_id}) была принята!"
+            text=f"✅ Ваша интеграция (ID {integration_id}) была принята!",
         )
 
-    await callback.message.edit_text(f"Интеграция (ID {integration_id}) принята!", reply_markup=None)
+    await callback.message.edit_text(
+        f"Интеграция (ID {integration_id}) принята!", reply_markup=None
+    )
 
 
 @router.callback_query(F.data.startswith("reject_integration:"))
@@ -47,8 +49,9 @@ async def reject_integration(callback: CallbackQuery, bot: Bot, state: FSMContex
 
 
 @router.message(AdminRejectIntegration.waiting_for_reason_integration)
-async def process_reason_and_delete_integration(message: Message, bot: Bot, state: FSMContext):
-
+async def process_reason_and_delete_integration(
+    message: Message, bot: Bot, state: FSMContext
+):
 
     data = await state.get_data()
     integration_id = data.get("integration_id")
@@ -65,10 +68,30 @@ async def process_reason_and_delete_integration(message: Message, bot: Bot, stat
     if blogger:
         await bot.send_message(
             chat_id=blogger.telegram_id,
-            text=f"❌ Ваша интеграция (ID {integration_id}) отклонена и удалена по причине: {message.text}"
+            text=f"❌ Ваша интеграция (ID {integration_id}) отклонена и удалена по причине: {message.text}",
         )
 
     await message.answer(
         f"Интеграция (ID {integration_id}) отклонена и удалена по причине: {message.text}"
     )
     await state.clear()
+
+
+@router.callback_query(F.data.startswith("approve_integration_done:"))
+async def approve_integration_done(callback: CallbackQuery, bot: Bot):
+    await callback.answer()
+
+    integration_id = int(callback.data.split(":")[1])
+
+    integration = await IntegrationDAO.approve_integration_done(integration_id)
+
+    blogger = await BloggerDAO.get_one_or_none(id=integration.blogger_id)
+    if blogger:
+        await bot.send_message(
+            chat_id=blogger.telegram_id,
+            text=f"✅ Ваша интеграция (ID {integration_id}) принята как выполненная! Спасибо!",
+        )
+
+    await callback.message.answer(
+        f"Интеграция (ID {integration_id}) подтверждена как выполненная."
+    )

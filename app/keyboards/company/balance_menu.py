@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+
 def get_balance_menu_keyboard(company_id: int, balance: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
@@ -28,7 +29,7 @@ def get_balance_menu_keyboard(company_id: int, balance: int) -> InlineKeyboardMa
             [
                 InlineKeyboardButton(
                     text="⬅️ Главное меню",
-                    callback_data='main_menu',
+                    callback_data="main_menu",
                 )
             ],
         ]

@@ -48,7 +48,6 @@ async def process_profile_links(message: Message, state: FSMContext, bot: Bot):
             new_profile_links=profile_links,
         )
 
-
     await message.answer(
         f"Профиль блоггера с Telegram ID {blogger.telegram_id} отправлен на проверку.\n"
         f"Ссылки:\n" + "\n".join(profile_links)

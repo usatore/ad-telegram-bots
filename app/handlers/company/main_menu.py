@@ -6,6 +6,7 @@ from app.keyboards.company.main_menu import get_main_menu_keyboard
 
 router = Router()
 
+
 @router.callback_query(F.data == "main_menu")
 async def back_to_main_menu(callback: CallbackQuery):
     await callback.answer()
@@ -17,7 +18,9 @@ async def back_to_main_menu(callback: CallbackQuery):
 
     await callback.message.edit_text(
         text="\u2063",
-        reply_markup=get_main_menu_keyboard(balance=company.money_balance, company_id=company.id),
+        reply_markup=get_main_menu_keyboard(
+            balance=company.money_balance, company_id=company.id
+        ),
     )
 
 
@@ -33,8 +36,11 @@ async def get_main_menu(message: Message):
 
     await message.answer(
         text="\u2063",
-        reply_markup=get_main_menu_keyboard(balance=company.money_balance, company_id=company.id),
+        reply_markup=get_main_menu_keyboard(
+            balance=company.money_balance, company_id=company.id
+        ),
     )
+
 
 @router.message(CommandStart())
 async def process_command_start(message: Message):
@@ -46,17 +52,13 @@ async def process_command_start(message: Message):
 
     main_menu_keyboard = [[KeyboardButton(text="Главное меню")]]
 
-
     # Создаём обычную клавиатуру с кнопкой "Главное меню"
     reply_keyboard = ReplyKeyboardMarkup(
-        keyboard=main_menu_keyboard,
-        resize_keyboard=True,
-        row_width=1
+        keyboard=main_menu_keyboard, resize_keyboard=True, row_width=1
     )
-
 
     # Ответ пользователю
     await message.answer(
         "👋 Добро пожаловать в компанию-бот!\nЗдесь вы можете создать рекламную кампанию или управлять существующими.",
-        reply_markup=reply_keyboard
+        reply_markup=reply_keyboard,
     )

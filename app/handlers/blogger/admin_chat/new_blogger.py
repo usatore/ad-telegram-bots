@@ -9,7 +9,7 @@ router = Router()
 
 
 @router.callback_query(F.data.startswith("approve_blogger:"))
-#@for_admin
+# @for_admin
 async def approve_blogger(callback: CallbackQuery, bot: Bot):
     await callback.answer()
 
@@ -35,7 +35,7 @@ async def approve_blogger(callback: CallbackQuery, bot: Bot):
 
 
 @router.callback_query(F.data.startswith("reject_blogger:"))
-#@for_admin
+# @for_admin
 async def reject_blogger(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -50,19 +50,19 @@ async def reject_blogger(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(AdminRejectBlogger.waiting_for_reason_blogger)
-#@for_admin
-async def process_reason_and_delete_blogger(message: Message, bot: Bot, state: FSMContext):
-    print('ya v process reject reason')
+# @for_admin
+async def process_reason_and_delete_blogger(
+    message: Message, bot: Bot, state: FSMContext
+):
     data = await state.get_data()
     blogger_id = data.get("blogger_id")
 
-    blogger = await BloggerDAO.delete(id=blogger_id)
-    print(blogger)
+    blogger = await BloggerDAO.get_one_or_none(id=blogger_id)
+
     await bot.send_message(
         chat_id=blogger.telegram_id,
-        text=f"❌ Ваш профиль был отклонён и удалён администратором.\nПричина: {message.text}"
+        text=f"❌ Ваши ссылки были не приняты администратором.\nПричина: {message.text}",
     )
-    print('ya tut')
 
     await message.answer(
         f"❌ Профиль блоггера (ID: {blogger_id}) отклонён и удалён.\nПричина: {message.text}"

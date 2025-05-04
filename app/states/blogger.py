@@ -8,3 +8,7 @@ class BloggerSendProfileLinks(StatesGroup):
 class BloggerCreateIntegration(StatesGroup):
     waiting_for_load_materials = State()
     waiting_for_submit_materials = State()
+
+
+class BloggerSendPublicationLinks(StatesGroup):
+    waiting_for_publication_links = State()

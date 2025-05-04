@@ -10,6 +10,7 @@ from app.config import settings
 
 router = Router()
 
+
 @router.callback_query(F.data == "add_deposit")
 async def process_add_deposit(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
@@ -20,11 +21,10 @@ async def process_add_deposit(callback: CallbackQuery, state: FSMContext):
         "Пожалуйста, переведите деньги по следующим реквизитам:\n"
         "`0000 1111 2222 3333`\n\n"
         "После оплаты введите сумму, которую вы отправили:",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
     )
 
     await state.set_state(CompanyAddDeposit.waiting_for_deposit_amount)
-
 
 
 @router.message(CompanyAddDeposit.waiting_for_deposit_amount)
@@ -43,7 +43,9 @@ async def process_deposit_amount(message: Message, state: FSMContext):
         await state.clear()
         return
 
-    deposit = await CompanyTransactionDAO.add_deposit(company_id=company.id, money_amount=deposit_amount)
+    deposit = await CompanyTransactionDAO.add_deposit(
+        company_id=company.id, money_amount=deposit_amount
+    )
 
     admin_text, admin_markup = create_deposit_admin_message(
         company_transaction_id=deposit.id,
@@ -60,6 +62,3 @@ async def process_deposit_amount(message: Message, state: FSMContext):
 
     # Очищаем состояние
     await state.clear()
-
-
-
