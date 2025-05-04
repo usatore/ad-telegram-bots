@@ -12,7 +12,7 @@ router = Router()
 
 # Обработчик для кнопки "Принять"
 @router.callback_query(F.data.startswith("approve_campaign:"))
-@for_admin
+#@for_admin
 async def approve_campaign(callback: CallbackQuery, bot: Bot):
     await callback.answer()
     try:

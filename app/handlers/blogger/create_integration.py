@@ -11,7 +11,7 @@ from app.dao.campaign import CampaignDAO
 from app.config import settings
 from aiogram.fsm.context import FSMContext
 from app.states.blogger import BloggerCreateIntegration
-from app.messages.admin_chat import create_integration_admin_message
+from app.messages.new_integration import create_integration_admin_message
 
 router = Router()
 

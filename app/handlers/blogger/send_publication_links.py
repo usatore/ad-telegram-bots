@@ -6,7 +6,7 @@ from app.config import settings
 from app.dao.integration import IntegrationDAO
 from app.dao.blogger import BloggerDAO
 from app.dao.campaign import CampaignDAO
-from app.messages.admin_chat import create_publication_links_admin_message
+from app.messages.publication_links import create_publication_links_admin_message
 
 
 router = Router()

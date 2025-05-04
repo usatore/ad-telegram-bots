@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from app.states.company import CompanyAddDeposit
 from app.dao.company import CompanyDAO
 from app.dao.company_transaction import CompanyTransactionDAO
-from app.messages.admin_chat import create_deposit_admin_message
+from app.messages.new_deposit import create_deposit_admin_message
 from app.config import settings
 
 
