@@ -14,7 +14,7 @@ router = Router()
 
 
 # Хендлер для кнопки "Получить кампании для блоггера"
-@router.callback_query(F.data.startswith("get_campaigns"))
+@router.callback_query(F.data == 'get_campaigns')
 async def get_campaigns(callback: CallbackQuery, bot: Bot):
     """Обработчик для получения доступных рекламных кампаний для блоггера."""
 

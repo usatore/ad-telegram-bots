@@ -43,12 +43,12 @@ async def reject_integration(callback: CallbackQuery, bot: Bot, state: FSMContex
 
     integration_id = int(callback.data.split(":")[1])
 
-    await state.set_state(AdminRejectIntegration.waiting_for_reason_integration)
+    await state.set_state(AdminRejectIntegration.waiting_for_reason)
     await state.update_data(integration_id=integration_id)
     await callback.message.answer("Введите причину отклонения интеграции:")
 
 
-@router.message(AdminRejectIntegration.waiting_for_reason_integration)
+@router.message(AdminRejectIntegration.waiting_for_reason)
 async def process_reason_and_delete_integration(
     message: Message, bot: Bot, state: FSMContext
 ):

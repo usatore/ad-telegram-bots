@@ -8,7 +8,7 @@ def get_main_menu_keyboard(company_id: int, balance: int) -> InlineKeyboardMarku
             [
                 InlineKeyboardButton(
                     text="📋 Мои кампании",
-                    callback_data=f"get_campaigns_for_company:{company_id}",
+                    callback_data="get_campaigns",
                 )
             ],
             [

@@ -19,7 +19,7 @@ async def on_main_menu_callback(callback: CallbackQuery):
 
     await callback.message.edit_text(
         text="\u2063",
-        reply_markup=get_main_menu_keyboard(balance=1337),
+        reply_markup=get_main_menu_keyboard(balance=0),
     )
 
 
@@ -29,14 +29,13 @@ async def get_main_menu(message: Message):
 
     await message.answer(
         text="\u2063",
-        reply_markup=get_main_menu_keyboard(balance=1337),
+        reply_markup=get_main_menu_keyboard(balance=0),
     )
 
 
 @router.message(CommandStart())
 async def process_command_start(message: Message):
     blogger = await BloggerDAO.get_one_or_none(telegram_id=message.from_user.id)
-
     if not blogger:
         blogger = await BloggerDAO.create_blogger(telegram_id=message.from_user.id)
 

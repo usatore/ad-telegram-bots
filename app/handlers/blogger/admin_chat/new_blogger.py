@@ -26,7 +26,7 @@ async def approve_blogger(callback: CallbackQuery, bot: Bot):
 
     await bot.send_message(
         chat_id=blogger.telegram_id,
-        text="✅ Ваш профиль был одобрен администратором. Ожидайте рекламных интеграций.",
+        text="✅ Ваш профиль был одобрен администратором.\n Теперь вы получили доступ к рекламным кампаниям.",
     )
 
     await callback.message.edit_text(
@@ -41,7 +41,7 @@ async def reject_blogger(callback: CallbackQuery, state: FSMContext):
 
     blogger_id = int(callback.data.split(":")[1])
 
-    await state.set_state(AdminRejectBlogger.waiting_for_reason_blogger)
+    await state.set_state(AdminRejectBlogger.waiting_for_reason)
     await state.update_data(blogger_id=blogger_id)
 
     await callback.message.answer("✏️ Введите причину отклонения профиля блоггера:")
@@ -49,7 +49,7 @@ async def reject_blogger(callback: CallbackQuery, state: FSMContext):
     print(await state.get_state())
 
 
-@router.message(AdminRejectBlogger.waiting_for_reason_blogger)
+@router.message(AdminRejectBlogger.waiting_for_reason)
 # @for_admin
 async def process_reason_why_no_update_profile_links(
     message: Message, bot: Bot, state: FSMContext

@@ -10,19 +10,10 @@ class BloggerDAO(BaseDAO):
 
     @classmethod
     @dao_exception_handler(model)
-    async def create_blogger(cls, telegram_id: int, profile_links: list):
+    async def create_blogger(cls, telegram_id: int,):
 
         async with async_session_maker() as session:
-            # Проверяем, существует ли блоггер с таким Telegram ID
-            existing_blogger = await session.execute(
-                select(cls.model).filter_by(telegram_id=telegram_id)
-            )
-            if existing_blogger.scalars().first():
-                raise ValueError(
-                    f"Blogger with telegram_id {telegram_id} already exists"
-                )
 
-            # Создаём нового блоггера
             new_blogger = Blogger(telegram_id=telegram_id)
             session.add(new_blogger)
             await session.commit()

@@ -7,6 +7,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
     #restart: unless-stopped
 
   redis:

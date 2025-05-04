@@ -66,9 +66,12 @@ async def process_materials(message: Message, state: FSMContext):
 
     materials = {}
 
-    materials["text"] = message.text
-    materials["photo"] = message.photo[-1].file_id
-    materials["video"] = message.video.file_id
+    if message.text:
+        materials["text"] = message.text
+    if message.photo:
+        materials["photo"] = message.photo[-1].file_id
+    if message.video:
+        materials["video"] = message.video.file_id
 
     await state.update_data(materials=materials)
 

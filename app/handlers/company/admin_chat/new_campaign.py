@@ -52,13 +52,13 @@ async def reject_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
         await callback.message.answer("Некорректный формат данных.")
         return
 
-    await state.set_state(AdminRejectCampaign.waiting_for_reason_campaign)
+    await state.set_state(AdminRejectCampaign.waiting_for_reason)
     await state.update_data(campaign_id=campaign_id)
 
     await callback.message.answer("Введите причину отклонения кампании:")
 
 
-@router.message(AdminRejectCampaign.waiting_for_reason_campaign)
+@router.message(AdminRejectCampaign.waiting_for_reason)
 # @for_admin здесь с этим декоратором-фильтра ошибка, в прицнипе это не обязательно.
 async def process_reason_and_delete_campaign(
     message: Message, bot: Bot, state: FSMContext
