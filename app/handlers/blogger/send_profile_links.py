@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from app.states.blogger import BloggerSendProfileLinks
 from app.dao.blogger import BloggerDAO
 from app.config import settings
-from app.messages.admin_chat import create_profile_links_admin_message
+from app.messages.profile_links import create_profile_links_admin_message
 
 
 router = Router()

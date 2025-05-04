@@ -9,7 +9,7 @@ from aiogram.fsm.context import FSMContext
 from app.states.company import CompanyCreateCampaign
 from app.dao.company import CompanyDAO
 from app.dao.campaign import CampaignDAO
-from app.messages.admin_chat import create_campaign_admin_message
+from app.messages.new_campaign import create_campaign_admin_message
 from app.config import settings
 
 
