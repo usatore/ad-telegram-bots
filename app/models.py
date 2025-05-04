@@ -34,7 +34,7 @@ class Blogger(Base):
 
     id = Column(Integer, primary_key=True, nullable=False)
     telegram_id = Column(BigInteger, nullable=False)
-    profile_links = Column(JSON, default=list)
+    profile_links = Column(JSON, nullable=True, default=list)
     money_balance = Column(Integer, default=0)
     approved = Column(Boolean, default=False, nullable=False)
 

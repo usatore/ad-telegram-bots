@@ -7,14 +7,11 @@ from app.logger import logger
 # Импорт всех роутеров компании
 from app.handlers.company.main_menu import router as router_company_main_menu
 from app.handlers.company.get_campaigns import router as router_company_get_campaigns
-from app.handlers.company.create_campaign import (
-    router as router_company_create_campaign,
-)
-from app.handlers.company.balance import router as router_balance
-from app.handlers.company.admin_chat.new_campaign import (
-    router as router_company_admin_chat,
-)
-from app.handlers.company.add_deposit import router as router_add_deposit
+from app.handlers.company.create_campaign import router as router_company_create_campaign
+from app.handlers.company.balance import router as router_company_balance
+from app.handlers.company.admin_chat.new_campaign import router as router_company_new_campaign
+from app.handlers.company.add_deposit import router as router_company_add_deposit
+from app.handlers.company.admin_chat.new_deposit import router as router_company_new_deposit
 
 
 async def run_company_bot():
@@ -27,9 +24,10 @@ async def run_company_bot():
             router_company_main_menu,
             router_company_get_campaigns,
             router_company_create_campaign,
-            router_company_admin_chat,
-            router_balance,
-            router_add_deposit,
+            router_company_new_campaign,
+            router_company_add_deposit,
+            router_company_balance,
+            router_company_new_deposit,
         )
         logger.info("✅ Роутеры компании успешно подключены.")
 

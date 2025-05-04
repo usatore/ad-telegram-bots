@@ -21,7 +21,7 @@ def get_main_menu_keyboard(balance: int) -> InlineKeyboardMarkup:
             ],
             [
                 InlineKeyboardButton(
-                    text="🔗 Отправить ссылки", callback_data="send_links"
+                    text="🔗 Отправить ссылки", callback_data="send_profile_links"
                 )
             ],
             [

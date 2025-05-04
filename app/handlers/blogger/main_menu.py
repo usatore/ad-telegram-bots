@@ -35,14 +35,15 @@ async def get_main_menu(message: Message):
 
 @router.message(CommandStart())
 async def process_command_start(message: Message):
-    # blogger = await BloggerDAO.get_one_or_none(telegram_id=message.from_user.id)
-    # if not blogger:
-    # blogger = await BloggerDAO.create(telegram_id=message.from_user.id)
+    blogger = await BloggerDAO.get_one_or_none(telegram_id=message.from_user.id)
 
-    main_menu_keyboard = [[KeyboardButton(text="Главное меню")]]
+    if not blogger:
+        blogger = await BloggerDAO.create_blogger(telegram_id=message.from_user.id)
+
+    button_main_menu_keyboard = [[KeyboardButton(text="Главное меню")]]
 
     reply_keyboard = ReplyKeyboardMarkup(
-        keyboard=main_menu_keyboard,
+        keyboard=button_main_menu_keyboard,
         resize_keyboard=True,
         row_width=1,
     )

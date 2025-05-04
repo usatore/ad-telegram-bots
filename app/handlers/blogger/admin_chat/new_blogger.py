@@ -51,7 +51,7 @@ async def reject_blogger(callback: CallbackQuery, state: FSMContext):
 
 @router.message(AdminRejectBlogger.waiting_for_reason_blogger)
 # @for_admin
-async def process_reason_and_delete_blogger(
+async def process_reason_why_no_update_profile_links(
     message: Message, bot: Bot, state: FSMContext
 ):
     data = await state.get_data()
@@ -61,11 +61,11 @@ async def process_reason_and_delete_blogger(
 
     await bot.send_message(
         chat_id=blogger.telegram_id,
-        text=f"❌ Ваши ссылки были не приняты администратором.\nПричина: {message.text}",
+        text=f"❌ Ваши ссылки были не приняты администратором. Повторите действие. \nПричина: {message.text}",
     )
 
     await message.answer(
-        f"❌ Профиль блоггера (ID: {blogger_id}) отклонён и удалён.\nПричина: {message.text}"
+        f"❌ Ссылки блоггера (ID: {blogger_id}) отклонены.\nПричина: {message.text}"
     )
 
     await state.clear()

@@ -11,8 +11,8 @@ router = Router()
 
 
 # Хендлер на нажатие кнопки "Отправить ссылки"
-@router.callback_query(F.data == "send_links")
-async def process_profile_links(callback: CallbackQuery, state: FSMContext):
+@router.callback_query(F.data == "send_profile_links")
+async def send_profile_links(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer("Пожалуйста, отправьте ссылку на профиль блоггера:")
     await state.update_data(telegram_id=callback.from_user.id)
     await state.set_state(BloggerSendProfileLinks.waiting_for_profile_links)
@@ -28,25 +28,15 @@ async def process_profile_links(message: Message, state: FSMContext, bot: Bot):
         return
 
     profile_links = [line.strip() for line in message.text.splitlines() if line.strip()]
-    if not profile_links:
-        await message.answer("Вы не указали ни одной корректной ссылки.")
-        await message.delete()
-        await state.clear()
-        return
 
     data = await state.get_data()
 
     blogger = await BloggerDAO.get_one_or_none(telegram_id=message.from_user.id)
-    if not blogger:
-        blogger = await BloggerDAO.create_blogger(
-            telegram_id=message.from_user.id, profile_links=profile_links
-        )
-    else:
-        blogger.approved = False
-        blogger = await BloggerDAO.update_profile_links(
-            blogger_id=blogger.id,
-            new_profile_links=profile_links,
-        )
+
+    blogger = await BloggerDAO.update_profile_links(
+        blogger_id=blogger.id,
+        new_profile_links=profile_links,
+    )
 
     await message.answer(
         f"Профиль блоггера с Telegram ID {blogger.telegram_id} отправлен на проверку.\n"

@@ -5,24 +5,14 @@ from app.storage import blogger_storage
 from app.logger import logger
 
 # Импорт всех роутеров блогера
-from app.handlers.blogger.admin_chat.new_blogger import (
-    router as router_blogger_admin_chat_new_blogger,
-)
-from app.handlers.blogger.admin_chat.new_integration import (
-    router as router_blogger_admin_chat_new_integration,
-)
-from app.handlers.blogger.create_profile import router as router_blogger_create_profile
+from app.handlers.blogger.admin_chat.new_blogger import router as router_blogger_new_blogger
+from app.handlers.blogger.admin_chat.new_integration import router as router_blogger_new_integration
+from app.handlers.blogger.send_profile_links import router as router_blogger_create_profile
 from app.handlers.blogger.main_menu import router as router_blogger_main_menu
 from app.handlers.blogger.get_campaigns import router as router_blogger_get_campaigns
-from app.handlers.blogger.create_integration import (
-    router as router_blogger_create_integration,
-)
-from app.handlers.blogger.get_integrations import (
-    router as router_blogger_get_integrations,
-)
-from app.handlers.blogger.send_publication_links import (
-    router as router_blogger_send_publication_links,
-)
+from app.handlers.blogger.create_integration import router as router_blogger_create_integration
+from app.handlers.blogger.get_integrations import router as router_blogger_get_integrations
+from app.handlers.blogger.send_publication_links import router as router_blogger_send_publication_links
 
 
 async def run_blogger_bot():
@@ -32,8 +22,8 @@ async def run_blogger_bot():
 
         logger.info("🚀 Подключение роутеров блогера...")
         dp.include_routers(
-            router_blogger_admin_chat_new_blogger,
-            router_blogger_admin_chat_new_integration,
+            router_blogger_new_blogger,
+            router_blogger_new_integration,
             router_blogger_create_profile,
             router_blogger_main_menu,
             router_blogger_get_campaigns,

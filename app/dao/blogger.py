@@ -11,9 +11,7 @@ class BloggerDAO(BaseDAO):
     @classmethod
     @dao_exception_handler(model)
     async def create_blogger(cls, telegram_id: int, profile_links: list):
-        """
-        Создаёт блоггера с указанным Telegram ID и ссылками на профили.
-        """
+
         async with async_session_maker() as session:
             # Проверяем, существует ли блоггер с таким Telegram ID
             existing_blogger = await session.execute(
@@ -25,10 +23,10 @@ class BloggerDAO(BaseDAO):
                 )
 
             # Создаём нового блоггера
-            new_blogger = Blogger(telegram_id=telegram_id, profile_links=profile_links)
+            new_blogger = Blogger(telegram_id=telegram_id)
             session.add(new_blogger)
             await session.commit()
-            # await session.refresh(new_blogger)
+
             return new_blogger
 
     @classmethod
@@ -48,7 +46,7 @@ class BloggerDAO(BaseDAO):
     @dao_exception_handler(model)
     async def update_profile_links(cls, blogger_id: int, new_profile_links: list):
         """
-        Обновляет профили блоггера по его ID.
+        Обновляет профили блоггера по его ID и сбрасывает approved = False.
         """
         async with async_session_maker() as session:
             blogger = await session.get(Blogger, blogger_id)
@@ -56,5 +54,7 @@ class BloggerDAO(BaseDAO):
                 raise ValueError(f"Blogger with id {blogger_id} not found")
 
             blogger.profile_links = new_profile_links
+            blogger.approved = False  # Меняем Статус на непроверенный админом
             await session.commit()
             return blogger
+
