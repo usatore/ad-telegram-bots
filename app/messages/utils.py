@@ -1,11 +1,14 @@
 import functools
+from aiogram.types import Update
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from app.config import settings
 
+# В данный момент ничего отсюда не используется
+# Идея была в том чтобы валидировать что админ кликает по кнопкам предназначенным для админ-чата
 
-def extract_user_id(update) -> int:
+def extract_user_id(update: Update) -> int:
     """Извлекает user_id из update, если найден нужный объект."""
     # Список атрибутов, которые могут содержать .from_user.id
     update_paths = [
