@@ -1,6 +1,7 @@
-from sqlalchemy import select, delete
-from app.database import async_session_maker
+from sqlalchemy import delete, select
+
 from app.dao.utils import dao_exception_handler
+from app.database import async_session_maker
 
 
 class BaseDAO:

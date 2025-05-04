@@ -1,12 +1,13 @@
-from app.dao.company import CompanyDAO
-from aiogram import Router, F
+from aiogram import F, Router
+from aiogram.filters import CommandStart
 from aiogram.types import (
-    Message,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    Message,
 )
-from aiogram.filters import CommandStart
+
+from app.dao.company import CompanyDAO
 from app.keyboards.company.balance_menu import get_balance_menu_keyboard
 
 router = Router()

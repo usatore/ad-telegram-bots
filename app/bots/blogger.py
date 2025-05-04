@@ -1,18 +1,32 @@
-from aiogram import Bot, Dispatcher
-from app.config import settings
 import asyncio
-from app.storage import blogger_storage
-from app.logger import logger
+
+from aiogram import Bot, Dispatcher
+
+from app.config import settings
 
 # Импорт всех роутеров блогера
-from app.handlers.blogger.admin_chat.new_blogger import router as router_blogger_new_blogger
-from app.handlers.blogger.admin_chat.new_integration import router as router_blogger_new_integration
-from app.handlers.blogger.send_profile_links import router as router_blogger_create_profile
-from app.handlers.blogger.main_menu import router as router_blogger_main_menu
+from app.handlers.blogger.admin_chat.new_blogger import (
+    router as router_blogger_new_blogger,
+)
+from app.handlers.blogger.admin_chat.new_integration import (
+    router as router_blogger_new_integration,
+)
+from app.handlers.blogger.create_integration import (
+    router as router_blogger_create_integration,
+)
 from app.handlers.blogger.get_campaigns import router as router_blogger_get_campaigns
-from app.handlers.blogger.create_integration import router as router_blogger_create_integration
-from app.handlers.blogger.get_integrations import router as router_blogger_get_integrations
-from app.handlers.blogger.send_publication_links import router as router_blogger_send_publication_links
+from app.handlers.blogger.get_integrations import (
+    router as router_blogger_get_integrations,
+)
+from app.handlers.blogger.main_menu import router as router_blogger_main_menu
+from app.handlers.blogger.send_profile_links import (
+    router as router_blogger_create_profile,
+)
+from app.handlers.blogger.send_publication_links import (
+    router as router_blogger_send_publication_links,
+)
+from app.logger import logger
+from app.storage import blogger_storage
 
 
 async def run_blogger_bot():

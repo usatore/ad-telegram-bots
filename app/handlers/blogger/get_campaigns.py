@@ -1,14 +1,15 @@
+from aiogram import Bot, F, Router
 from aiogram.types import (
     CallbackQuery,
-    Message,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    Message,
 )
-from aiogram import Router, Bot, F
-from app.dao.integration import IntegrationDAO
+
+from app.config import settings
 from app.dao.blogger import BloggerDAO
 from app.dao.campaign import CampaignDAO
-from app.config import settings
+from app.dao.integration import IntegrationDAO
 
 router = Router()
 

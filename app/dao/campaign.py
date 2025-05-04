@@ -1,8 +1,9 @@
-from app.dao.base import BaseDAO
-from app.models import Campaign, Company, Integration
-from app.database import async_session_maker
-from app.dao.utils import dao_exception_handler
 from sqlalchemy import select
+
+from app.dao.base import BaseDAO
+from app.dao.utils import dao_exception_handler
+from app.database import async_session_maker
+from app.models import Campaign, Company, Integration
 
 
 class CampaignDAO(BaseDAO):

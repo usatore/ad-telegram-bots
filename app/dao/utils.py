@@ -1,6 +1,8 @@
-from app.logger import logger
-from sqlalchemy.exc import SQLAlchemyError
 from functools import wraps
+
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.logger import logger
 
 
 def dao_exception_handler(model):

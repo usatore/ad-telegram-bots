@@ -1,5 +1,6 @@
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.types import CallbackQuery
+
 from app.dao.campaign import CampaignDAO
 from app.dao.company import CompanyDAO
 from app.dao.integration import IntegrationDAO

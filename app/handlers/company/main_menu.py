@@ -1,7 +1,8 @@
-from app.dao.company import CompanyDAO
-from aiogram import Router, F
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, CallbackQuery
+from aiogram import F, Router
 from aiogram.filters import CommandStart
+from aiogram.types import CallbackQuery, KeyboardButton, Message, ReplyKeyboardMarkup
+
+from app.dao.company import CompanyDAO
 from app.keyboards.company.main_menu import get_main_menu_keyboard
 
 router = Router()

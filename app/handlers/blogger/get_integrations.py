@@ -1,8 +1,9 @@
+from aiogram import F, Router
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from aiogram import Router, F
-from app.dao.integration import IntegrationDAO
+
 from app.dao.blogger import BloggerDAO
 from app.dao.campaign import CampaignDAO
+from app.dao.integration import IntegrationDAO
 
 router = Router()
 

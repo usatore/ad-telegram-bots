@@ -1,6 +1,8 @@
-from app.config import settings
 import functools
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from app.config import settings
 
 
 def extract_user_id(update) -> int:

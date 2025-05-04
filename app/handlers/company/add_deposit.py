@@ -1,12 +1,12 @@
-from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from app.states.company import CompanyAddDeposit
+from aiogram.types import CallbackQuery, Message
+
+from app.config import settings
 from app.dao.company import CompanyDAO
 from app.dao.company_transaction import CompanyTransactionDAO
 from app.messages.new_deposit import create_deposit_admin_message
-from app.config import settings
-
+from app.states.company import CompanyAddDeposit
 
 router = Router()
 

@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, Boolean, JSON, DateTime, BigInteger
-from sqlalchemy.orm import relationship, validates
 from datetime import datetime
+
+from sqlalchemy import JSON, BigInteger, Boolean, Column, DateTime, ForeignKey, Integer
+from sqlalchemy.orm import relationship, validates
 
 from app.database import Base
 

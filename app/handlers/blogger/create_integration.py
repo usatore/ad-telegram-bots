@@ -1,17 +1,18 @@
+from aiogram import Bot, F, Router
+from aiogram.fsm.context import FSMContext
 from aiogram.types import (
     CallbackQuery,
-    Message,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    Message,
 )
-from aiogram import Router, Bot, F
-from app.dao.integration import IntegrationDAO
+
+from app.config import settings
 from app.dao.blogger import BloggerDAO
 from app.dao.campaign import CampaignDAO
-from app.config import settings
-from aiogram.fsm.context import FSMContext
-from app.states.blogger import BloggerCreateIntegration
+from app.dao.integration import IntegrationDAO
 from app.messages.new_integration import create_integration_admin_message
+from app.states.blogger import BloggerCreateIntegration
 
 router = Router()
 
@@ -93,24 +94,12 @@ async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
 
     data = await state.get_data()
     materials = data.get("materials", {})
-    message_id = data.get("materials_message_id")  # ID сообщения с материалами
+    message_id = data.get("materials_message_id")
 
     blogger_id = data.get("blogger_id")
     campaign_id = data.get("campaign_id")
 
-    if not any(materials.values()):
-        await callback.message.edit_text(
-            "Материалы не были загружены, пожалуйста, загрузите их."
-        )
-        return
-
-    integration = await IntegrationDAO.get_one_or_none(
-        blogger_id=blogger_id, campaign_id=campaign_id
-    )
-
-    if not integration:
-        await callback.message.edit_text("Интеграция не найдена.")
-        return
+    integration = await IntegrationDAO.get_one_or_none(blogger_id=blogger_id, campaign_id=campaign_id)
 
     await IntegrationDAO.update_materials(
         integration_id=integration.id, materials=materials
@@ -126,7 +115,7 @@ async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
         description=campaign.description,
         materials=materials,
     )
-
+    '''
     # Пересылаем сообщение с материалами в админ-чат
     if message_id:
         try:
@@ -139,8 +128,9 @@ async def submit_for_materials(callback: CallbackQuery, state: FSMContext):
             await callback.message.answer(
                 f"Не удалось переслать сообщение с материалами: {e}"
             )
+    '''
 
-    # Отправляем сообщение с описанием интеграции и кнопками
+    # Отправляем сообщение в админчат с описанием интеграции и кнопками
     await callback.bot.send_message(
         chat_id=settings.ADMIN_CHAT_ID, text=admin_text, reply_markup=admin_markup
     )

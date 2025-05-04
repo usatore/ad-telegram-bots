@@ -1,17 +1,25 @@
-from aiogram import Bot, Dispatcher
-from app.config import settings
-from app.storage import company_storage
 import asyncio
-from app.logger import logger
+
+from aiogram import Bot, Dispatcher
+
+from app.config import settings
+from app.handlers.company.add_deposit import router as router_company_add_deposit
+from app.handlers.company.admin_chat.new_campaign import (
+    router as router_company_new_campaign,
+)
+from app.handlers.company.admin_chat.new_deposit import (
+    router as router_company_new_deposit,
+)
+from app.handlers.company.balance import router as router_company_balance
+from app.handlers.company.create_campaign import (
+    router as router_company_create_campaign,
+)
+from app.handlers.company.get_campaigns import router as router_company_get_campaigns
 
 # Импорт всех роутеров компании
 from app.handlers.company.main_menu import router as router_company_main_menu
-from app.handlers.company.get_campaigns import router as router_company_get_campaigns
-from app.handlers.company.create_campaign import router as router_company_create_campaign
-from app.handlers.company.balance import router as router_company_balance
-from app.handlers.company.admin_chat.new_campaign import router as router_company_new_campaign
-from app.handlers.company.add_deposit import router as router_company_add_deposit
-from app.handlers.company.admin_chat.new_deposit import router as router_company_new_deposit
+from app.logger import logger
+from app.storage import company_storage
 
 
 async def run_company_bot():

@@ -1,9 +1,9 @@
-from aiogram.types import CallbackQuery, Message
-from aiogram import Router, Bot, F
+from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, Message
 
-from app.dao.integration import IntegrationDAO
 from app.dao.blogger import BloggerDAO
+from app.dao.integration import IntegrationDAO
 from app.states.admin import AdminRejectIntegration
 
 router = Router()
@@ -29,11 +29,11 @@ async def approve_integration_materials(callback: CallbackQuery, bot: Bot):
     if blogger:
         await bot.send_message(
             chat_id=blogger.telegram_id,
-            text=f"✅ Ваша интеграция (ID {integration_id}) была принята!",
+            text=f"✅ Материалы интеграции (ID {integration_id}) приняты!",
         )
 
-    await callback.message.edit_text(
-        f"Интеграция (ID {integration_id}) принята!", reply_markup=None
+    await callback.message.answer(
+        f"Материалы интеграции (ID {integration_id}) приняты!", reply_markup=None
     )
 
 

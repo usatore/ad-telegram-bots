@@ -1,17 +1,17 @@
-from aiogram import Router, Bot, F
+from aiogram import Bot, F, Router
+from aiogram.fsm.context import FSMContext
 from aiogram.types import (
-    Message,
+    CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    CallbackQuery,
+    Message,
 )
-from aiogram.fsm.context import FSMContext
-from app.states.company import CompanyCreateCampaign
-from app.dao.company import CompanyDAO
-from app.dao.campaign import CampaignDAO
-from app.messages.new_campaign import create_campaign_admin_message
-from app.config import settings
 
+from app.config import settings
+from app.dao.campaign import CampaignDAO
+from app.dao.company import CompanyDAO
+from app.messages.new_campaign import create_campaign_admin_message
+from app.states.company import CompanyCreateCampaign
 
 router = Router()
 

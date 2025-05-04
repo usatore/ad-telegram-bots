@@ -1,6 +1,6 @@
-from aiogram.fsm.storage.redis import RedisStorage, Redis, DefaultKeyBuilder
-from app.config import settings
+from aiogram.fsm.storage.redis import DefaultKeyBuilder, Redis, RedisStorage
 
+from app.config import settings
 
 company_redis = Redis(
     host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=1, decode_responses=True

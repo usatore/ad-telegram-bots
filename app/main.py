@@ -1,6 +1,7 @@
 import asyncio
-from app.bots.company import run_company_bot
+
 from app.bots.blogger import run_blogger_bot
+from app.bots.company import run_company_bot
 
 
 async def main():

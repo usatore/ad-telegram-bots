@@ -1,6 +1,6 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton
+from aiogram import F, Router
 from aiogram.filters import CommandStart
+from aiogram.types import CallbackQuery, KeyboardButton, Message, ReplyKeyboardMarkup
 
 from app.dao.blogger import BloggerDAO
 from app.keyboards.blogger.main_menu import get_main_menu_keyboard

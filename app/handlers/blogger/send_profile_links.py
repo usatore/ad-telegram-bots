@@ -1,11 +1,11 @@
-from aiogram.types import CallbackQuery, Message
-from aiogram import Router, Bot, F
+from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
-from app.states.blogger import BloggerSendProfileLinks
-from app.dao.blogger import BloggerDAO
-from app.config import settings
-from app.messages.profile_links import create_profile_links_admin_message
+from aiogram.types import CallbackQuery, Message
 
+from app.config import settings
+from app.dao.blogger import BloggerDAO
+from app.messages.profile_links import create_profile_links_admin_message
+from app.states.blogger import BloggerSendProfileLinks
 
 router = Router()
 
