@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     BLOGGER_BOT_TOKEN: str
 
     ADMIN_CHAT_ID: int
-    ADMIN_IDS: list[int]
 
     DB_HOST: str
     DB_PORT: int

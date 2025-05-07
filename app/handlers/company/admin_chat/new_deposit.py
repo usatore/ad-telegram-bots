@@ -5,7 +5,6 @@ from aiogram.types import CallbackQuery, Message
 from app.dao.campaign import CampaignDAO
 from app.dao.company import CompanyDAO
 from app.dao.company_transaction import CompanyTransactionDAO
-from app.messages.utils import for_admin
 from app.states.admin import AdminRejectCampaign
 
 router = Router()

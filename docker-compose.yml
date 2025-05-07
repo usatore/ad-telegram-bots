@@ -8,9 +8,10 @@ services:
     ports:
       - "5432:5432"
     environment:
-      LANG: C.UTF-8
-      LC_ALL: C.UTF-8
-    #restart: unless-stopped
+      POSTGRES_DB: my_db
+      POSTGRES_USER: my_user
+      POSTGRES_PASSWORD: my_password
+    restart: unless-stopped
 
   redis:
     image: redis:latest
@@ -18,12 +19,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
-    #restart: unless-stopped
+    restart: unless-stopped
 
 
   company_bot:
-    build:
-      context: .
+    image: usatore/ad-telegram-bots
     command: >
       sh -c "alembic upgrade head &&
              python -m app.bots.company"
@@ -31,11 +31,10 @@ services:
     depends_on:
       - db
       - redis
-    #restart: unless-stopped
+    restart: unless-stopped
 
   blogger_bot:
-    build:
-      context: .
+    image: usatore/ad-telegram-bots
     command: >
       sh -c "alembic upgrade head &&
              python -m app.bots.blogger"
@@ -43,7 +42,7 @@ services:
     depends_on:
       - db
       - redis
-    #restart: unless-stopped
+    restart: unless-stopped
 
 volumes:
   postgres_data:

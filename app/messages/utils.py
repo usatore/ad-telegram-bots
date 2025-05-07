@@ -1,3 +1,4 @@
+'''
 import functools
 from aiogram.types import Update
 
@@ -50,3 +51,4 @@ def for_admin(func):
         return await func(update, *args, **kwargs)
 
     return wrapper
+'''
