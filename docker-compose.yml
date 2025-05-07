@@ -23,7 +23,7 @@ services:
 
 
   company_bot:
-    image: usatore/ad-telegram-bots
+    image: usatore/ad-telegram-bots:latest
     command: >
       sh -c "alembic upgrade head &&
              python -m app.bots.company"

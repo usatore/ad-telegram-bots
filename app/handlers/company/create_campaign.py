@@ -19,6 +19,12 @@ router = Router()
 @router.callback_query(F.data == "create_campaign")
 async def create_campaign(callback: CallbackQuery, bot: Bot, state: FSMContext):
     await callback.answer()
+    company = await CompanyDAO.get_one_or_none(telegram_id=callback.from_user.id)
+
+    if not company or company.money_balance < 10000:
+        await callback.message.answer("❗ Пополните баланс минимум на 10 000 ₽ для создания кампании.")
+        return
+
     await state.set_state(CompanyCreateCampaign.waiting_for_content_type)
     await callback.message.answer(
         "Последовательно заполните данные об анкете. \n Укажите типы контента"
